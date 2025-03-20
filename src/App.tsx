@@ -1,12 +1,15 @@
 import React from 'react';
-import ExampleComponent from './components/ExampleComponent';
+import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
+import {Outlet} from "react-router-dom";
+import {ReactQueryDevtools} from "@tanstack/react-query-devtools";
 
-const App: React.FC = () => {
+const queryClient = new QueryClient();
+function App() {
     return (
-        <div>
-            <h1>Welcome to the Pre-Employment Assignment</h1>
-            <ExampleComponent />
-        </div>
+      <QueryClientProvider client={queryClient}>
+        <ReactQueryDevtools initialIsOpen={true} />
+        <Outlet />
+      </QueryClientProvider>
     );
 };
 
