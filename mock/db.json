@@ -1,0 +1,145 @@
+{
+  "my_accounts": [
+    {
+      "id": 1,
+      "logo": ".",
+      "balance": 1000000,
+      "account_number": "110-1234-5678",
+      "holder_name": "김준태",
+      "bank": {
+        "code": "088",
+        "name": "신한",
+        "image_url": "https://t1.daumcdn.net/kakaopay/assignment/frontend/assets/shinhan.png",
+        "aliases": ["신한", "신한은행"],
+        "bank_nickname": ""
+      }
+    },
+    {
+      "id": 2,
+      "logo": ".",
+      "balance": 2000000,
+      "account_number": "110-2345-6789",
+      "holder_name": "이준호",
+      "bank": {
+        "code": "090",
+        "name": "카카오뱅크",
+        "image_url": "https://t1.daumcdn.net/kakaopay/assignment/frontend/assets/kakaobank.png",
+        "aliases": ["카뱅", "카카오뱅크"],
+        "bank_nickname": ""
+      }
+    },
+    {
+      "id": 3,
+      "logo": ".",
+      "balance": 3000000,
+      "account_number": "110-3456-7890",
+      "holder_name": "박지성",
+      "bank": {
+        "code": "011",
+        "name": "농협",
+        "image_url": "https://t1.daumcdn.net/kakaopay/assignment/frontend/assets/nh.png",
+        "aliases": ["농협", "농협은행", "NH", "NH농협"],
+        "bank_nickname": ""
+      }
+    },
+    {
+      "id": 4,
+      "logo": ".",
+      "balance": 4000000,
+      "account_number": "110-4567-8901",
+      "holder_name": "최민수",
+      "bank": {
+        "code": "004",
+        "name": "국민",
+        "image_url": "https://t1.daumcdn.net/kakaopay/assignment/frontend/assets/kb.png",
+        "aliases": ["국민", "국민은행"],
+        "bank_nickname": ""
+      }
+    },
+    {
+      "id": 5,
+      "logo": ".",
+      "balance": 5000000,
+      "account_number": "110-5678-9012",
+      "holder_name": "김영희",
+      "bank": {
+        "code": "032",
+        "name": "하나",
+        "image_url": "https://t1.daumcdn.net/kakaopay/assignment/frontend/assets/hana.png",
+        "aliases": ["하나", "하나은행"],
+        "bank_nickname": ""
+      }
+    }
+  ],
+  "recents_transfer_accounts": [
+    {
+      "id": 1,
+      "account_number": "143-5678-9012",
+      "holder_name": "김하진",
+      "bank": {
+        "code": "004",
+        "image_url": "https://t1.daumcdn.net/kakaopay/assignment/frontend/assets/kb.png"
+      }
+    },
+    {
+      "id": 2,
+      "account_number": "143-6789-0123",
+      "holder_name": "정우성",
+      "bank": {
+        "code": "090",
+        "image_url": "https://t1.daumcdn.net/kakaopay/assignment/frontend/assets/kakaobank.png"
+      }
+    },
+    {
+      "id": 3,
+      "account_number": "143-7890-1234",
+      "holder_name": "정혜진",
+      "bank": {
+        "code": "032",
+        "image_url": "https://t1.daumcdn.net/kakaopay/assignment/frontend/assets/hana.png"
+      }
+    }
+  ],
+  "bookmark_accounts": [
+    {
+      "bank_account_number": "110-1234-5678",
+      "id": 1
+    },
+    {
+      "bank_account_number": "143-7890-1234",
+      "id": 2
+    }
+  ],
+  "limits": [
+    {
+      "limit": 5000000,
+      "type": "ONE_DAY_BALANCE",
+      "message": "500만원 송금 가능"
+    },
+    {
+      "limit": 2000000,
+      "type": "ONE_TIME_BALANCE",
+      "message": "200만원 송금 가능 (1회 한도 초과)"
+    }
+  ],
+  "my_info": {
+    "account": {
+      "balance": 142200,
+      "account_number": "110-1234-5678",
+      "holder_name": "김준태",
+      "bank": {
+        "code": "088",
+        "name": "신한",
+        "image_url": "https://t1.daumcdn.net/kakaopay/assignment/frontend/assets/shinhan.png"
+      }
+    },
+    "transfer": {
+      "one_day_amount": 3500000
+    }
+  },
+  "transfer": {
+    "bank_code": "080",
+    "account_number": "111-2311-2312",
+    "amount": 10000
+  }
+}
