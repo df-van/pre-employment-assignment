@@ -1,5 +1,10 @@
 import { useNavigate } from "react-router-dom";
-import { BANK_INFO_MAP, DEFAULT_BANK_INFO, PATH } from "../../config";
+import {
+  BANK_INFO_MAP,
+  DEFAULT_BANK_INFO,
+  PATH,
+  TRANSFER_ACCOUNT_TYPE,
+} from "../../config";
 import useAccounts from "../../hooks/useAccounts";
 import Loading from "../../components/Loading";
 import useBookmarks from "../../hooks/useBookmarks";
@@ -21,12 +26,12 @@ export default function Accounts() {
   const { bookmarksQuery } = useBookmarks();
   const { data: bookmarks, isLoading: isLoadingForBookmark } = bookmarksQuery();
 
-  const { setTransferAccount } = useAccountContext();
+  const { setTransferAccountInfo } = useAccountContext();
 
   /**
    * 내 계좌 목록 정보 - isBookmarked 추가
    */
-  const updatedMyAccounts: Account[] | undefined = useMemo(() => {
+  const updatedMyAccounts = useMemo(() => {
     if (!myAccounts || !bookmarks) return [];
     return myAccounts.map((account: Account) => ({
       ...account,
@@ -39,7 +44,7 @@ export default function Accounts() {
   /**
    * 최근 계좌 목록 정보 - isBookmarked 추가 & Account 정보로 mapping
    */
-  const updatedRecentTransferAccounts: Account[] | undefined = useMemo(() => {
+  const updatedRecentTransferAccounts = useMemo(() => {
     if (!recentTransferAccounts || !bookmarks) return [];
 
     return recentTransferAccounts.map((account: RecentTransferAccount) => {
@@ -47,14 +52,6 @@ export default function Accounts() {
 
       return {
         ...account,
-        logo: (account as Account).logo || "",
-        balance: (account as Account).balance || 0,
-        bank: {
-          ...account.bank,
-          name: bankInfo.name,
-          aliases: bankInfo.aliases,
-          bank_nickname: bankInfo.bank_nickname,
-        },
         isBookmarked: bookmarks.some(
           (bookmark: BookmarkAccount) =>
             bookmark.bank_account_number === account.account_number,
@@ -63,8 +60,18 @@ export default function Accounts() {
     });
   }, [recentTransferAccounts, bookmarks]);
 
-  const handleSelectAccount = (v: Account) => {
-    setTransferAccount(v);
+  const handleSelectMyAccount = (id: number) => {
+    setTransferAccountInfo({
+      account_type: TRANSFER_ACCOUNT_TYPE.MY_ACCOUNT,
+      id,
+    });
+    navigate(PATH.TRANSFER);
+  };
+  const handleSelectRecentTransferAccount = (id: number) => {
+    setTransferAccountInfo({
+      account_type: TRANSFER_ACCOUNT_TYPE.RECENT_TRANSFER_ACCOUNT,
+      id,
+    });
     navigate(PATH.TRANSFER);
   };
   const onClick = () => {
@@ -82,7 +89,7 @@ export default function Accounts() {
             updatedMyAccounts.map((account) => (
               <li key={account.id}>
                 {JSON.stringify(account)}
-                <button onClick={() => handleSelectAccount(account)}>
+                <button onClick={() => handleSelectMyAccount(account.id)}>
                   click
                 </button>
               </li>
@@ -99,7 +106,9 @@ export default function Accounts() {
             updatedRecentTransferAccounts.map((account) => (
               <li key={account.id}>
                 {JSON.stringify(account)}
-                <button onClick={() => handleSelectAccount(account)}>
+                <button
+                  onClick={() => handleSelectRecentTransferAccount(account.id)}
+                >
                   click
                 </button>
               </li>

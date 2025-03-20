@@ -26,9 +26,10 @@
     API_URL : api 주소
     BANK_INFO_MAP : 은행 정보 목록
     DEFAULT_BANK_INFO : 은행 코드가 없을 경우의 기본 은행 정보
-### 송금 계좌 정보는 context api 로 관리
-    transferAccount 
-    setTransferAccount
+### 송금 계좌 id 와 type 은 context api 로 관리
+    transferAccountInfo: TransferAccountInfo | null;
+    setTransferAccountInfo: (info: TransferAccountInfo | null) => void;
+
 
 
 

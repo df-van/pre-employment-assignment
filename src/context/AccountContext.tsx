@@ -1,18 +1,21 @@
 import { createContext, ReactNode, useContext, useState } from "react";
-import { Account } from "../types";
+import { TransferAccountInfo } from "../types";
 
 interface AccountContextType {
-  transferAccount: Account | null;
-  setTransferAccount: (account: Account | null) => void;
+  transferAccountInfo: TransferAccountInfo | null;
+  setTransferAccountInfo: (info: TransferAccountInfo | null) => void;
 }
 
 const AccountContext = createContext<AccountContextType | undefined>(undefined);
 
 export function AccountContextProvider({ children }: { children: ReactNode }) {
-  const [transferAccount, setTransferAccount] = useState<Account | null>(null);
+  const [transferAccountInfo, setTransferAccountInfo] =
+    useState<TransferAccountInfo | null>(null);
 
   return (
-    <AccountContext.Provider value={{ transferAccount, setTransferAccount }}>
+    <AccountContext.Provider
+      value={{ transferAccountInfo, setTransferAccountInfo }}
+    >
       {children}
     </AccountContext.Provider>
   );

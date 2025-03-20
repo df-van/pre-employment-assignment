@@ -1,3 +1,5 @@
+import { TRANSFER_ACCOUNT_TYPE } from "./config";
+
 interface Bank {
   code: string;
   name: string;
@@ -59,6 +61,13 @@ interface Transfer {
   amount: number;
 }
 
+type TransferAccountType = TRANSFER_ACCOUNT_TYPE;
+
+interface TransferAccountInfo {
+  account_type: TransferAccountType;
+  id: number;
+}
+
 export type {
   Bank,
   Account,
@@ -67,4 +76,6 @@ export type {
   Limit,
   MyInfo,
   Transfer,
+  TransferAccountType,
+  TransferAccountInfo,
 };

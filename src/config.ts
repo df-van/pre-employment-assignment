@@ -13,6 +13,14 @@ export const enum PATH {
 }
 
 /**
+ * route query
+ */
+export const enum TRANSFER_ACCOUNT_TYPE {
+  MY_ACCOUNT = "my-account",
+  RECENT_TRANSFER_ACCOUNT = "recent-transfer-account",
+}
+
+/**
  * 계좌 은행 정보 목록 맵
  */
 export const BANK_INFO_MAP: Record<
