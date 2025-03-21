@@ -3,7 +3,6 @@ import { Path } from "@/types";
 import IconLeft from "@/assets/icons/icon_header_left.svg?react";
 import IconRight from "@/assets/icons/icon_header_right.svg?react";
 import IconButton from "@/components/common/IconButton";
-import Loading from "@/components/common/Loading";
 
 interface HeaderInfo {
   backPath: Path;
@@ -22,7 +21,7 @@ export default function Header() {
   };
 
   return (
-    <header className="sticky w-full mt-[44px] top-[44px] flex items-center px-1 text-lg text-center bg-white">
+    <header className="sticky w-full mt-11 top-11 h-11 flex items-center px-1 text-lg text-center bg-white">
       {backPah && (
         <IconButton onClick={handleGoToBack}>
           <IconLeft />

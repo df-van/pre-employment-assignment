@@ -52,6 +52,10 @@
     Jest : 테스트 파일 실행 및 예상 결과 검증 수행, 모킹 기능 
     Testing Library : DOM 랜더링, 이벤트 시뮬레이션
 ### tailwindcss 로 스타일링 
+    기본 텍스트 색상 설정 : #060B11
+    최소 너비 지정 : 375px
+### 송금 과정 데이터 관리
+    myInfo, transferAccount, transfer 정보는 리액트 쿼리 캐시에 저장
 
 
 

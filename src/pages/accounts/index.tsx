@@ -143,18 +143,18 @@ export default function Accounts() {
   const handleAddBookmark = (accountNumber: string) => {
     addBookmarkMutation.mutate(accountNumber, {
       onSuccess: () => {},
-      onError: (error) => {},
+      onError: () => {},
     });
   };
   const handleDeleteBookmark = (id: number) => {
     deleteBookmarkMutation.mutate(id, {
       onSuccess: () => {},
-      onError: (error) => {},
+      onError: () => {},
     });
   };
 
   return (
-    <main>
+    <>
       <section>
         <div className="px-6 py-2">
           <h4 className="text-sm">내 계좌</h4>
@@ -199,6 +199,6 @@ export default function Accounts() {
           </ul>
         )}
       </section>
-    </main>
+    </>
   );
 }

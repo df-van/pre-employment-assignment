@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import React from "react";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   onClick?: () => void;
@@ -16,7 +16,7 @@ export default function IconButton({
   };
   return (
     <button
-      className={`rounded hover:bg-hover hover:duration-150 duration-300 transition-all ${className}`}
+      className={`flex justify-center items-center rounded hover:bg-hover hover:duration-150 duration-300 transition-all ${className}`}
       onClick={handleClick}
       {...props}
     >

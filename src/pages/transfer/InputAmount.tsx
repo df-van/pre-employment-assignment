@@ -6,11 +6,17 @@ import {
   TRANSFER_ACCOUNT_TYPE,
 } from "@/config";
 import useAccounts from "@/hooks/useAccounts";
-import Loading from "@/components/common/Loading";
 import { useAccountContext } from "@/context/AccountContext";
-import { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import useTransfer from "@/hooks/useTransfer";
 import { Account, Transfer } from "@/types";
+import ConfirmButton from "@/components/common/ConfirmButton";
+import BottomAreaWrapper from "@/components/common/BottomAreaWrapper";
+import NumberKeypad from "@/components/transfer/NumberKeypad";
+import NumberShortcut from "@/components/transfer/NumberShortcut";
+import BankLogo from "@/components/common/BankLogo";
+import IconSafe from "@/assets/icons/icon_safe_blue.svg?react";
+import TransferProcess from "@/pages/transfer/TransferProcess";
 
 export default function InputAmount() {
   const navigate = useNavigate();
@@ -37,7 +43,7 @@ export default function InputAmount() {
 
   const { transferMutation } = useTransfer();
 
-  const [amount] = useState(10);
+  const [amount, setAmount] = useState(0);
   const [isTransferProcessing, setIsTransferProcessing] = useState(false);
 
   /**
@@ -84,52 +90,87 @@ export default function InputAmount() {
     };
   }, [transferAccount, amount]);
 
-  const onClick = () => {
+  /**
+   * shortcut amount 버튼 이벤트
+   */
+  const handleAddAmount = (amount: number) => {
+    setAmount((prevAmount) => prevAmount + amount);
+  };
+  /**
+   * number keypad 버튼 이벤트
+   */
+  const handleUpdateAmount = (value: number | "delete") => {
+    setAmount((prevAmount) =>
+      value === "delete"
+        ? prevAmount && Number(String(prevAmount).slice(0, -1))
+        : Number(prevAmount + String(value)),
+    );
+  };
+  /**
+   * 송금 확인 버튼 이벤트
+   */
+  const handleConfirm = () => {
     setIsTransferProcessing(true);
     navigate(PATH.TRANSFER_PROCESS);
-    transferMutation.mutate(transferData, {
+    const data = {
+      transfer: transferData,
+      account: account!,
+      myInfo: myInfo!,
+    };
+    transferMutation.mutate(data, {
       onSuccess: () => {
         setTransferAccountInfo(null); // 송금 계좌 정보 초기화
         navigate(PATH.TRANSFER_COMPLETE);
       },
       onError: (error) => {
-        navigate(PATH.TRANSFER_FAILED);
+        const errorCode = error.response?.data?.error_code || "";
+        navigate(`${PATH.TRANSFER_FAILED}?errorCode=${errorCode}`);
       },
     });
   };
   return (
     <>
-      <p>{JSON.stringify(transferAccountInfo)}</p>
       {isTransferProcessing ? (
-        <h2>transfer process</h2>
+        <TransferProcess
+          amount={amount}
+          accountName={account?.holder_name || ""}
+        />
       ) : (
         <>
-          <h2>input amount</h2>
-          <h4>내 계좌</h4>
-          {isErrorForMyInfo ? (
-            <div>
-              내 계좌 데이터를 불러오는데 실패했습니다:{" "}
-              {myInfoError?.message || "알 수 없는 에러"}
+          <div className="flex-1 flex justify-center items-center">
+            <div className="text-center space-y-4">
+              <div className="flex flex-col items-center space-y-1">
+                <BankLogo
+                  url={account?.bank.image_url}
+                  alias={account?.bank.aliases}
+                />
+                <span className="inline-flex items-center space-x-1">
+                  <span className="text-sm opacity-55">
+                    {`${account?.bank.name} ${account?.account_number}`}
+                  </span>
+                  <IconSafe />
+                </span>
+              </div>
+              <div>
+                <p className="text-2xl font-semibold">{`${account?.holder_name} 님에게`}</p>
+                {amount ? (
+                  <p>{amount}</p>
+                ) : (
+                  <p className="text-2xl font-semibold opacity-15">
+                    얼마를 보낼까요?
+                  </p>
+                )}
+                <span className="opacity-40 text-sm pt-2">{`출금계좌: ${myInfo?.account.bank.name} ${myInfo?.account.account_number}(${myInfo?.account.balance}원)`}</span>
+              </div>
             </div>
-          ) : isLoadingForMyInfo ? (
-            <Loading />
-          ) : (
-            myInfo && <p>{JSON.stringify(myInfo)}</p>
-          )}
-          <h5>선택한 계좌</h5>
-          {isErrorForTransferAccount ? (
-            <div>
-              선택한 계좌 데이터를 불러오는데 실패했습니다:{" "}
-              {transferAccountError?.message || "알 수 없는 에러"}
-            </div>
-          ) : isLoadingForTransferAccount ? (
-            <Loading />
-          ) : (
-            account && <p>{JSON.stringify({ account })}</p>
-          )}
-          <button onClick={onClick} disabled={isTransferProcessing}>
-            확인
-          </button>
+          </div>
+          <BottomAreaWrapper>
+            <NumberShortcut onAddAmount={handleAddAmount} />
+            <NumberKeypad onUpdateAmount={handleUpdateAmount} />
+            <ConfirmButton onClick={handleConfirm} disabled={!amount}>
+              확인
+            </ConfirmButton>
+          </BottomAreaWrapper>
         </>
       )}
     </>

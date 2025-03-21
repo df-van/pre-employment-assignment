@@ -10,14 +10,16 @@ const queryClient = new QueryClient();
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <ReactQueryDevtools initialIsOpen={true} />
-      <AccountContextProvider>
-        <StatusBar />
-        <Header />
-        <Outlet />
-      </AccountContextProvider>
-    </QueryClientProvider>
+    <main className="flex flex-col h-screen">
+      <QueryClientProvider client={queryClient}>
+        <ReactQueryDevtools initialIsOpen={true} />
+        <AccountContextProvider>
+          <StatusBar />
+          <Header />
+          <Outlet />
+        </AccountContextProvider>
+      </QueryClientProvider>
+    </main>
   );
 }
 

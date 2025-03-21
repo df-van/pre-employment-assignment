@@ -1,6 +1,7 @@
 import { Account } from "@/types";
 import IconButton from "@/components/common/IconButton";
 import React from "react";
+import BankLogo from "@/components/common/BankLogo";
 
 export default function AccountItem({
   info,
@@ -31,13 +32,11 @@ export default function AccountItem({
         className="inline-flex w-full justify-between items-center p-3 space-x-3 rounded-xl"
         onClick={handlerClick}
       >
-        <div className="w-9 h-9">
-          <img
-            className="w-full h-auto"
-            src={info.bank.image_url}
-            alt={String(...(info.bank.aliases || ""))}
-          />
-        </div>
+        <BankLogo
+          className="w-9 h-9"
+          url={info.bank.image_url}
+          alias={info.bank.aliases}
+        />
         <div className="text-left  grow">
           <p>{info.holder_name}</p>
           <span className="text-xs opacity-55">{`${info.bank.name} ${info.account_number}`}</span>

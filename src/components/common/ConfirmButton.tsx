@@ -6,6 +6,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
   onClick?: () => void;
   className?: string;
+  disabled?: boolean;
 }
 const variantClasses: Record<ButtonVariant, string> = {
   primary: "bg-[#FFEB00] hover:bg-yellow-400 text-[#060B11]",
@@ -30,7 +31,8 @@ export default function ConfirmButton({
   };
   return (
     <button
-      className={`w-full p-4 text-xl rounded-full hover:duration-150 duration-500 transition-all ${classes} ${className}`}
+      className={`w-full p-4 text-xl rounded-full hover:duration-150 duration-500 transition-all ${classes} ${className || ""}`}
+      disabled={disabled}
       onClick={handleClick}
       {...props}
     >
