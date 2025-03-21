@@ -2,12 +2,25 @@
 
 카카오페이 frontend 사전과제를 위한 템플릿입니다. 과제를 해결하기 위한 전략 및 아키텍쳐들을 작성해주세요.
 #### 추가 설치 목록
-    pnpm add --save-dev --save-exact prettier
-    pnpm add react-router-dom  
-    pnpm add --save-dev axios
-    pnpm add @tanstack/react-query
-    pnpm add @tanstack/react-query-devtools@latest
-    pnpm add --save-dev jest
+    prettier
+    react-router-dom  
+    axios
+    @tanstack/react-query
+    @tanstack/react-query-devtools@latest
+    jest
+    ts-jest
+    ts-jest-mock-import-meta
+    ts-node
+    jest-environment-jsdom
+    @babel/preset-typescript
+    @testing-library/dom
+    @testing-library/jest-dom
+    @testing-library/react
+    @types/jest
+    @types/node
+    @types/react
+    @types/react-dom
+
 ### Router 구조
     / : home (에러 발생 : ErrorBoundary)
     ├── /accounts : 계좌 목록
@@ -29,6 +42,9 @@
 ### 송금 계좌 id 와 type 은 context api 로 관리
     transferAccountInfo: TransferAccountInfo | null;
     setTransferAccountInfo: (info: TransferAccountInfo | null) => void;
+### Jest 와 Testing Library 를 이용하여 주요 컴포넌트 테스트
+    Jest : 테스트 파일 실행 및 예상 결과 검증 수행, 모킹 기능 
+    Testing Library : DOM 랜더링, 이벤트 시뮬레이션
 
 
 

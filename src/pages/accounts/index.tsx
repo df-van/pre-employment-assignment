@@ -16,17 +16,58 @@ export default function Accounts() {
   const navigate = useNavigate();
 
   const { myAccountsQuery, recentTransferAccountsQuery } = useAccounts();
-  const { data: myAccounts, isLoading: isLoadingForMyAccounts } =
-    myAccountsQuery();
+  const {
+    data: myAccounts,
+    isLoading: isLoadingForMyAccounts,
+    isError: isErrorForMyAccounts,
+    error: myAccountsError,
+  } = myAccountsQuery();
   const {
     data: recentTransferAccounts,
     isLoading: isLoadingForRecentTransferAccounts,
+    isError: isErrorForRecentTransferAccounts,
+    error: recentTransferAccountsError,
   } = recentTransferAccountsQuery();
 
   const { bookmarksQuery } = useBookmarks();
-  const { data: bookmarks, isLoading: isLoadingForBookmark } = bookmarksQuery();
+  const {
+    data: bookmarks,
+    isLoading: isLoadingForBookmark,
+    isError: isErrorForBookmark,
+    error: bookmarksError,
+  } = bookmarksQuery();
 
   const { setTransferAccountInfo } = useAccountContext();
+
+  /**
+   * API 에러 케이스 처리: 하나라도 에러가 발생하면 에러 메시지 렌더링
+   */
+  if (
+    isErrorForMyAccounts ||
+    isErrorForRecentTransferAccounts ||
+    isErrorForBookmark
+  ) {
+    return (
+      <div>
+        {isErrorForMyAccounts && (
+          <p>
+            내 계좌 데이터를 불러오는데 실패했습니다: {myAccountsError?.message}
+          </p>
+        )}
+        {isErrorForRecentTransferAccounts && (
+          <p>
+            최근 계좌 데이터를 불러오는데 실패했습니다:{" "}
+            {recentTransferAccountsError?.message}
+          </p>
+        )}
+        {isErrorForBookmark && (
+          <p>
+            북마크 데이터를 불러오는데 실패했습니다: {bookmarksError?.message}
+          </p>
+        )}
+      </div>
+    );
+  }
 
   /**
    * 내 계좌 목록 정보 - isBookmarked 추가

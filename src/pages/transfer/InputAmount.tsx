@@ -16,15 +16,24 @@ export default function InputAmount() {
   const navigate = useNavigate();
 
   const { myInfoQuery, accountByIdQuery } = useAccounts();
-  const { data: myInfo, isLoading: isLoadingForMyInfo } = myInfoQuery();
+  const {
+    data: myInfo,
+    isLoading: isLoadingForMyInfo,
+    isError: isErrorForMyInfo,
+    error: myInfoError,
+  } = myInfoQuery();
 
   const { transferAccountInfo, setTransferAccountInfo } = useAccountContext();
 
-  const { data: transferAccount, isLoading: isLoadingForTransferAccount } =
-    accountByIdQuery(
-      transferAccountInfo?.id!,
-      transferAccountInfo?.account_type!,
-    );
+  const {
+    data: transferAccount,
+    isLoading: isLoadingForTransferAccount,
+    isError: isErrorForTransferAccount,
+    error: transferAccountError,
+  } = accountByIdQuery(
+    transferAccountInfo?.id!,
+    transferAccountInfo?.account_type!,
+  );
 
   const { transferMutation } = useTransfer();
 
@@ -83,7 +92,6 @@ export default function InputAmount() {
         navigate(PATH.TRANSFER_COMPLETE);
       },
       onError: (error) => {
-        console.error(`송금 실패 : ${error}`);
         navigate(PATH.TRANSFER_FAILED);
       },
     });
@@ -95,14 +103,25 @@ export default function InputAmount() {
         <h2>transfer process</h2>
       ) : (
         <>
-          <h2>input amount</h2> <h4>내 계좌</h4>
-          {isLoadingForMyInfo ? (
+          <h2>input amount</h2>
+          <h4>내 계좌</h4>
+          {isErrorForMyInfo ? (
+            <div>
+              내 계좌 데이터를 불러오는데 실패했습니다:{" "}
+              {myInfoError?.message || "알 수 없는 에러"}
+            </div>
+          ) : isLoadingForMyInfo ? (
             <Loading />
           ) : (
             myInfo && <p>{JSON.stringify(myInfo)}</p>
           )}
           <h5>선택한 계좌</h5>
-          {isLoadingForTransferAccount ? (
+          {isErrorForTransferAccount ? (
+            <div>
+              선택한 계좌 데이터를 불러오는데 실패했습니다:{" "}
+              {transferAccountError?.message || "알 수 없는 에러"}
+            </div>
+          ) : isLoadingForTransferAccount ? (
             <Loading />
           ) : (
             account && <p>{JSON.stringify({ account })}</p>
