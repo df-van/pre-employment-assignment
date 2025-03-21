@@ -24,18 +24,18 @@ export default function InputAmount() {
   const { myInfoQuery, accountByIdQuery } = useAccounts();
   const {
     data: myInfo,
-    isLoading: isLoadingForMyInfo,
+    /*isLoading: isLoadingForMyInfo,
     isError: isErrorForMyInfo,
-    error: myInfoError,
+    error: myInfoError,*/
   } = myInfoQuery();
 
   const { transferAccountInfo, setTransferAccountInfo } = useAccountContext();
 
   const {
     data: transferAccount,
-    isLoading: isLoadingForTransferAccount,
+    /*isLoading: isLoadingForTransferAccount,
     isError: isErrorForTransferAccount,
-    error: transferAccountError,
+    error: transferAccountError,*/
   } = accountByIdQuery(
     transferAccountInfo?.id!,
     transferAccountInfo?.account_type!,

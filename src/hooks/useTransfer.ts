@@ -10,15 +10,11 @@ export default function useTransfer() {
    * 송금 요청
    */
   const transferMutation = useMutation({
-    mutationFn: ({
-      transfer: data,
-      account,
-      myInfo,
-    }: {
+    mutationFn: (data: {
       transfer: Transfer;
       account: Account;
       myInfo: MyInfo;
-    }) => transfer(data),
+    }) => transfer(data.transfer),
     onSuccess: (_, variables) => {
       console.log("송금 성공!");
       queryClient.setQueryData(["success_transfer"], variables);
