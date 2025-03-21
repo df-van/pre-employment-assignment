@@ -4,13 +4,14 @@ import {
   DEFAULT_BANK_INFO,
   PATH,
   TRANSFER_ACCOUNT_TYPE,
-} from "../../config";
-import useAccounts from "../../hooks/useAccounts";
-import Loading from "../../components/common/Loading";
-import useBookmarks from "../../hooks/useBookmarks";
+} from "@/config";
+import useAccounts from "@/hooks/useAccounts";
+import useBookmarks from "@/hooks/useBookmarks";
 import { useMemo } from "react";
-import { Account, BookmarkAccount, RecentTransferAccount } from "../../types";
-import { useAccountContext } from "../../context/AccountContext";
+import { Account, BookmarkAccount, RecentTransferAccount } from "@/types";
+import { useAccountContext } from "@/context/AccountContext";
+import LoadingCard from "@/components/common/LoadingCard";
+import AccountItem from "@/components/accounts/AccountItem";
 
 export default function Accounts() {
   const navigate = useNavigate();
@@ -29,7 +30,8 @@ export default function Accounts() {
     error: recentTransferAccountsError,
   } = recentTransferAccountsQuery();
 
-  const { bookmarksQuery } = useBookmarks();
+  const { bookmarksQuery, addBookmarkMutation, deleteBookmarkMutation } =
+    useBookmarks();
   const {
     data: bookmarks,
     isLoading: isLoadingForBookmark,
@@ -76,9 +78,13 @@ export default function Accounts() {
     if (!myAccounts || !bookmarks) return [];
     return myAccounts.map((account: Account) => ({
       ...account,
-      isBookmarked: bookmarks.some(
-        (bookmarks: BookmarkAccount) =>
-          bookmarks.bank_account_number === account.account_number,
+      bookmark_id: bookmarks.reduce(
+        (acc: number, bookmarks: BookmarkAccount) => {
+          if (bookmarks.bank_account_number === account.account_number)
+            return bookmarks.id;
+          return acc;
+        },
+        0,
       ),
     }));
   }, [myAccounts, bookmarks]);
@@ -93,14 +99,30 @@ export default function Accounts() {
 
       return {
         ...account,
-        isBookmarked: bookmarks.some(
-          (bookmark: BookmarkAccount) =>
-            bookmark.bank_account_number === account.account_number,
+        logo: (account as Account).logo || "",
+        balance: (account as Account).balance || 0,
+        bank: {
+          ...account.bank,
+          name: bankInfo.name,
+          aliases: bankInfo.aliases,
+          bank_nickname: bankInfo.bank_nickname,
+        },
+        bookmark_id: bookmarks.reduce(
+          (acc: number, bookmarks: BookmarkAccount) => {
+            if (bookmarks.bank_account_number === account.account_number)
+              return bookmarks.id;
+            return acc;
+          },
+          0,
         ),
-      };
+      } as Account;
     });
   }, [recentTransferAccounts, bookmarks]);
 
+  /**
+   * 송금 계좌 선택 버튼 이벤트
+   * @param id
+   */
   const handleSelectMyAccount = (id: number) => {
     setTransferAccountInfo({
       account_type: TRANSFER_ACCOUNT_TYPE.MY_ACCOUNT,
@@ -115,60 +137,68 @@ export default function Accounts() {
     });
     navigate(PATH.TRANSFER);
   };
-  const handleSubmit = () => {
-    navigate(PATH.TRANSFER);
+  /**
+   * 북마크 토글 버튼 이벤트
+   */
+  const handleAddBookmark = (accountNumber: string) => {
+    addBookmarkMutation.mutate(accountNumber, {
+      onSuccess: () => {},
+      onError: (error) => {},
+    });
+  };
+  const handleDeleteBookmark = (id: number) => {
+    deleteBookmarkMutation.mutate(id, {
+      onSuccess: () => {},
+      onError: (error) => {},
+    });
   };
 
   return (
-    <>
-      <h1>accounts</h1>
-      <h4>내 계좌</h4>
-      {isLoadingForMyAccounts && isLoadingForBookmark ? (
-        <Loading />
-      ) : (
-        <ul>
-          {updatedMyAccounts &&
-            updatedMyAccounts.map((account) => (
-              <li key={account.id}>
-                {JSON.stringify(account)}
-                <button onClick={() => handleSelectMyAccount(account.id)}>
-                  click
-                </button>
-              </li>
-            ))}
-        </ul>
-      )}
-
-      <h4>최근</h4>
-      {isLoadingForRecentTransferAccounts && isLoadingForBookmark ? (
-        <Loading />
-      ) : (
-        <ul>
-          {updatedRecentTransferAccounts &&
-            updatedRecentTransferAccounts.map((account) => (
-              <li key={account.id}>
-                {JSON.stringify(account)}
-                <button
-                  onClick={() => handleSelectRecentTransferAccount(account.id)}
-                >
-                  click
-                </button>
-              </li>
-            ))}
-        </ul>
-      )}
-      <h5>---bookmark---</h5>
-      {isLoadingForBookmark ? (
-        <Loading />
-      ) : (
-        <ul>
-          {bookmarks &&
-            bookmarks.map((bookmark) => (
-              <li key={bookmark.id}>{JSON.stringify(bookmark)}</li>
-            ))}
-        </ul>
-      )}
-      <button onClick={handleSubmit}>확인</button>
-    </>
+    <main>
+      <section>
+        <div className="px-6 py-2">
+          <h4 className="text-sm">내 계좌</h4>
+        </div>
+        {isLoadingForMyAccounts && isLoadingForBookmark ? (
+          <LoadingCard />
+        ) : (
+          <ul>
+            {updatedMyAccounts &&
+              updatedMyAccounts.map((account) => (
+                <li key={account.id}>
+                  <AccountItem
+                    info={account}
+                    onClick={handleSelectMyAccount}
+                    onAddBookmark={handleAddBookmark}
+                    onDeleteBookmark={handleDeleteBookmark}
+                  />
+                </li>
+              ))}
+          </ul>
+        )}
+      </section>
+      <section>
+        <div className="px-6 py-2">
+          <h4 className="text-sm">최근</h4>
+        </div>
+        {isLoadingForRecentTransferAccounts && isLoadingForBookmark ? (
+          <LoadingCard />
+        ) : (
+          <ul>
+            {updatedRecentTransferAccounts &&
+              updatedRecentTransferAccounts.map((account) => (
+                <li key={account.id}>
+                  <AccountItem
+                    info={account}
+                    onClick={handleSelectRecentTransferAccount}
+                    onAddBookmark={handleAddBookmark}
+                    onDeleteBookmark={handleDeleteBookmark}
+                  />
+                </li>
+              ))}
+          </ul>
+        )}
+      </section>
+    </main>
   );
 }

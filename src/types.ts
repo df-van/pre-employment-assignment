@@ -15,7 +15,7 @@ interface Account {
   account_number: string;
   holder_name: string;
   bank: Bank;
-  isBookmarked?: boolean;
+  bookmark_id?: number;
 }
 
 interface RecentTransferAccount {

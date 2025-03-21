@@ -16,8 +16,9 @@ export default function IconButton({
   };
   return (
     <button
-      className={`rounded hover:bg-hover hover:duration-150 duration-500 transition-all ${className}`}
+      className={`rounded hover:bg-hover hover:duration-150 duration-300 transition-all ${className}`}
       onClick={handleClick}
+      {...props}
     >
       {children}
     </button>

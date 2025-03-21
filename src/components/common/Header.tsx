@@ -3,6 +3,7 @@ import { Path } from "@/types";
 import IconLeft from "@/assets/icons/icon_header_left.svg?react";
 import IconRight from "@/assets/icons/icon_header_right.svg?react";
 import IconButton from "@/components/common/IconButton";
+import Loading from "@/components/common/Loading";
 
 interface HeaderInfo {
   backPath: Path;
