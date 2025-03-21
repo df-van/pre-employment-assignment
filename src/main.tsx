@@ -15,6 +15,7 @@ import TransferComplete from "./pages/transfer/TransferComplete";
 import TransferFailed from "./pages/transfer/TransferFailed";
 import NotFound from "./pages/errors/NotFound";
 import { PATH } from "./config";
+import "./index.css";
 
 const router = createBrowserRouter([
   {
@@ -26,6 +27,7 @@ const router = createBrowserRouter([
       {
         path: PATH.ACCOUNTS,
         element: <Accounts />,
+        handle: { isShowMenu: true, backPath: PATH.HOME },
       },
       {
         path: PATH.TRANSFER,
@@ -36,12 +38,22 @@ const router = createBrowserRouter([
             element: <Navigate to={PATH.TRANSFER_INPUT_AMOUNT} replace />,
           },
           {
-            index: true,
             path: PATH.TRANSFER_INPUT_AMOUNT,
             element: <InputAmount />,
+            handle: { isShowMenu: false, backPath: PATH.ACCOUNTS },
           },
-          { path: PATH.TRANSFER_COMPLETE, element: <TransferComplete /> },
-          { path: PATH.TRANSFER_FAILED, element: <TransferFailed /> },
+          {
+            path: PATH.TRANSFER_PROCESS,
+            element: <InputAmount />,
+          },
+          {
+            path: PATH.TRANSFER_COMPLETE,
+            element: <TransferComplete />,
+          },
+          {
+            path: PATH.TRANSFER_FAILED,
+            element: <TransferFailed />,
+          },
         ],
       },
       { path: "*", element: <NotFound /> },

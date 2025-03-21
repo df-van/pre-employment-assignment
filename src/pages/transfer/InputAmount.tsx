@@ -4,13 +4,13 @@ import {
   DEFAULT_BANK_INFO,
   PATH,
   TRANSFER_ACCOUNT_TYPE,
-} from "../../config";
-import useAccounts from "../../hooks/useAccounts";
-import Loading from "../../components/Loading";
-import { useAccountContext } from "../../context/AccountContext";
+} from "@/config";
+import useAccounts from "@/hooks/useAccounts";
+import Loading from "@/components/common/Loading";
+import { useAccountContext } from "@/context/AccountContext";
 import { useEffect, useMemo, useState } from "react";
-import useTransfer from "../../hooks/useTransfer";
-import { Account, RecentTransferAccount, Transfer } from "../../types";
+import useTransfer from "@/hooks/useTransfer";
+import { Account, Transfer } from "@/types";
 
 export default function InputAmount() {
   const navigate = useNavigate();
@@ -37,7 +37,7 @@ export default function InputAmount() {
 
   const { transferMutation } = useTransfer();
 
-  const [amount, setAmount] = useState(10);
+  const [amount] = useState(10);
   const [isTransferProcessing, setIsTransferProcessing] = useState(false);
 
   /**
@@ -86,6 +86,7 @@ export default function InputAmount() {
 
   const onClick = () => {
     setIsTransferProcessing(true);
+    navigate(PATH.TRANSFER_PROCESS);
     transferMutation.mutate(transferData, {
       onSuccess: () => {
         setTransferAccountInfo(null); // 송금 계좌 정보 초기화

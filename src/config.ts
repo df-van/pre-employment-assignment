@@ -8,6 +8,7 @@ export const enum PATH {
   ACCOUNTS = "/accounts",
   TRANSFER = "/transfer",
   TRANSFER_INPUT_AMOUNT = "/transfer/input-amount",
+  TRANSFER_PROCESS = "/transfer/process",
   TRANSFER_COMPLETE = "/transfer/complete",
   TRANSFER_FAILED = "/transfer/failed",
 }

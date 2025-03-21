@@ -6,7 +6,7 @@ import {
   TRANSFER_ACCOUNT_TYPE,
 } from "../../config";
 import useAccounts from "../../hooks/useAccounts";
-import Loading from "../../components/Loading";
+import Loading from "../../components/common/Loading";
 import useBookmarks from "../../hooks/useBookmarks";
 import { useMemo } from "react";
 import { Account, BookmarkAccount, RecentTransferAccount } from "../../types";
@@ -115,9 +115,10 @@ export default function Accounts() {
     });
     navigate(PATH.TRANSFER);
   };
-  const onClick = () => {
+  const handleSubmit = () => {
     navigate(PATH.TRANSFER);
   };
+
   return (
     <>
       <h1>accounts</h1>
@@ -167,7 +168,7 @@ export default function Accounts() {
             ))}
         </ul>
       )}
-      <button onClick={onClick}>확인</button>
+      <button onClick={handleSubmit}>확인</button>
     </>
   );
 }

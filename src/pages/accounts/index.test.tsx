@@ -13,7 +13,7 @@ jest.mock("react-router-dom", () => ({
 }));
 
 // mock Loading 컴포넌트
-jest.mock("../../components/Loading", () => () => <div>Loading...</div>);
+jest.mock("../../components/common/Loading", () => () => <div>Loading...</div>);
 
 // mock useAccounts hook
 jest.mock("../../hooks/useAccounts", () => ({

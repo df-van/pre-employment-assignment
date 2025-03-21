@@ -1,4 +1,4 @@
-import { TRANSFER_ACCOUNT_TYPE } from "./config";
+import { PATH, TRANSFER_ACCOUNT_TYPE } from "./config";
 
 interface Bank {
   code: string;
@@ -61,6 +61,7 @@ interface Transfer {
   amount: number;
 }
 
+type Path = PATH | "";
 type TransferAccountType = TRANSFER_ACCOUNT_TYPE;
 
 interface TransferAccountInfo {
@@ -76,6 +77,7 @@ export type {
   Limit,
   MyInfo,
   Transfer,
+  Path,
   TransferAccountType,
   TransferAccountInfo,
 };
