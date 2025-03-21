@@ -167,6 +167,7 @@ export default function Accounts() {
               updatedMyAccounts.map((account) => (
                 <li key={account.id}>
                   <AccountItem
+                    type={TRANSFER_ACCOUNT_TYPE.MY_ACCOUNT}
                     info={account}
                     onClick={handleSelectMyAccount}
                     onAddBookmark={handleAddBookmark}
@@ -189,6 +190,7 @@ export default function Accounts() {
               updatedRecentTransferAccounts.map((account) => (
                 <li key={account.id}>
                   <AccountItem
+                    type={TRANSFER_ACCOUNT_TYPE.RECENT_TRANSFER_ACCOUNT}
                     info={account}
                     onClick={handleSelectRecentTransferAccount}
                     onAddBookmark={handleAddBookmark}

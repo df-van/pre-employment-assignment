@@ -1,19 +1,29 @@
-import { Account } from "@/types";
+import { Account, TransferAccountType } from "@/types";
 import IconButton from "@/components/common/IconButton";
-import React from "react";
+import React, { useMemo } from "react";
 import BankLogo from "@/components/common/BankLogo";
+import { TRANSFER_ACCOUNT_TYPE } from "@/config";
 
 export default function AccountItem({
+  type,
   info,
   onClick,
   onAddBookmark,
   onDeleteBookmark,
 }: {
+  type: TransferAccountType;
   info: Account;
   onClick: (id: number) => void;
   onAddBookmark: (accountNumber: string) => void;
   onDeleteBookmark: (id: number) => void;
 }) {
+  const name = useMemo(() => {
+    if (type === TRANSFER_ACCOUNT_TYPE.MY_ACCOUNT) {
+      return info.bank.bank_nickname || "별명 미설정";
+    }
+    return info.holder_name;
+  }, [type, info]);
+
   const handlerClick = () => {
     onClick(info.id);
   };
@@ -38,7 +48,7 @@ export default function AccountItem({
           alias={info.bank.aliases}
         />
         <div className="text-left  grow">
-          <p>{info.holder_name}</p>
+          <p>{name}</p>
           <span className="text-xs opacity-55">{`${info.bank.name} ${info.account_number}`}</span>
         </div>
         <div className="cursor-pointer" onClick={handleBookmarkClick}>

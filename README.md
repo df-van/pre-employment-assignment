@@ -56,6 +56,8 @@
     최소 너비 지정 : 375px
 ### 송금 과정 데이터 관리
     myInfo, transferAccount, transfer 정보는 리액트 쿼리 캐시에 저장
+### 의문점
+    내 계좌에서 계좌 별명 연결 데이타에 대한 확신이 없었음 -> banck_nickname 으로 연결하여 처리
 
 
 
