@@ -119,7 +119,7 @@
     {
       "id": 4,
       "account_number": "143-7990-1264",
-      "holder_name": "정혜진",
+      "holder_name": "김하성",
       "bank": {
         "code": "011",
         "image_url": "https://t1.daumcdn.net/kakaopay/assignment/frontend/assets/nh.png"
@@ -128,7 +128,7 @@
     {
       "id": 5,
       "account_number": "143-7832-1238",
-      "holder_name": "정혜진",
+      "holder_name": "류현진",
       "bank": {
         "code": "004",
         "image_url": "https://t1.daumcdn.net/kakaopay/assignment/frontend/assets/kb.png"
@@ -137,7 +137,7 @@
     {
       "id": 6,
       "account_number": "143-7563-4232",
-      "holder_name": "정혜진",
+      "holder_name": "손흥민",
       "bank": {
         "code": "090",
         "image_url": "https://t1.daumcdn.net/kakaopay/assignment/frontend/assets/kakaobank.png"
@@ -188,6 +188,6 @@
   "transfer": {
     "bank_code": "032",
     "account_number": "110-5678-9012",
-    "amount": 80
+    "amount": 88
   }
 }

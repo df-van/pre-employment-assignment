@@ -10,8 +10,8 @@ import useBookmarks from "@/hooks/useBookmarks";
 import { useEffect, useMemo } from "react";
 import { Account, BookmarkAccount, RecentTransferAccount } from "@/types";
 import { useAccountContext } from "@/context/AccountContext";
-import LoadingCard from "@/components/common/LoadingCard";
-import AccountItem from "@/components/accounts/AccountItem";
+
+import AccountToggle from "@/components/accounts/AccountToggle";
 
 export default function Accounts() {
   const navigate = useNavigate();
@@ -21,13 +21,13 @@ export default function Accounts() {
     data: myAccounts,
     isLoading: isLoadingForMyAccounts,
     isError: isErrorForMyAccounts,
-    error: myAccountsError,
+    error: errorMyAccounts,
   } = myAccountsQuery();
   const {
     data: recentTransferAccounts,
     isLoading: isLoadingForRecentTransferAccounts,
     isError: isErrorForRecentTransferAccounts,
-    error: recentTransferAccountsError,
+    error: errorRecentTransferAccounts,
   } = recentTransferAccountsQuery();
 
   const { bookmarksQuery, addBookmarkMutation, deleteBookmarkMutation } =
@@ -36,7 +36,7 @@ export default function Accounts() {
     data: bookmarks,
     isLoading: isLoadingForBookmark,
     isError: isErrorForBookmark,
-    error: bookmarksError,
+    error: errorBookmarks,
   } = bookmarksQuery();
 
   const { setTransferAccountInfo } = useAccountContext();
@@ -47,36 +47,6 @@ export default function Accounts() {
   useEffect(() => {
     sessionStorage.removeItem("transferAccountInfo");
   }, []);
-
-  /**
-   * API 에러 케이스 처리: 하나라도 에러가 발생하면 에러 메시지 렌더링
-   */
-  if (
-    isErrorForMyAccounts ||
-    isErrorForRecentTransferAccounts ||
-    isErrorForBookmark
-  ) {
-    return (
-      <div>
-        {isErrorForMyAccounts && (
-          <p>
-            내 계좌 데이터를 불러오는데 실패했습니다: {myAccountsError?.message}
-          </p>
-        )}
-        {isErrorForRecentTransferAccounts && (
-          <p>
-            최근 계좌 데이터를 불러오는데 실패했습니다:{" "}
-            {recentTransferAccountsError?.message}
-          </p>
-        )}
-        {isErrorForBookmark && (
-          <p>
-            북마크 데이터를 불러오는데 실패했습니다: {bookmarksError?.message}
-          </p>
-        )}
-      </div>
-    );
-  }
 
   /**
    * 내 계좌 목록 정보 - isBookmarked 추가
@@ -164,53 +134,31 @@ export default function Accounts() {
   };
 
   return (
-    <>
-      <section>
-        <div className="px-6 py-2">
-          <h4 className="text-sm">내 계좌</h4>
-        </div>
-        {isLoadingForMyAccounts && isLoadingForBookmark ? (
-          <LoadingCard />
-        ) : (
-          <ul>
-            {updatedMyAccounts &&
-              updatedMyAccounts.map((account) => (
-                <li key={account.id}>
-                  <AccountItem
-                    type={TRANSFER_ACCOUNT_TYPE.MY_ACCOUNT}
-                    info={account}
-                    onClick={handleSelectMyAccount}
-                    onAddBookmark={handleAddBookmark}
-                    onDeleteBookmark={handleDeleteBookmark}
-                  />
-                </li>
-              ))}
-          </ul>
-        )}
-      </section>
-      <section>
-        <div className="px-6 py-2">
-          <h4 className="text-sm">최근</h4>
-        </div>
-        {isLoadingForRecentTransferAccounts && isLoadingForBookmark ? (
-          <LoadingCard />
-        ) : (
-          <ul>
-            {updatedRecentTransferAccounts &&
-              updatedRecentTransferAccounts.map((account) => (
-                <li key={account.id}>
-                  <AccountItem
-                    type={TRANSFER_ACCOUNT_TYPE.RECENT_TRANSFER_ACCOUNT}
-                    info={account}
-                    onClick={handleSelectRecentTransferAccount}
-                    onAddBookmark={handleAddBookmark}
-                    onDeleteBookmark={handleDeleteBookmark}
-                  />
-                </li>
-              ))}
-          </ul>
-        )}
-      </section>
-    </>
+    <div className="space-y-4">
+      <AccountToggle
+        type={TRANSFER_ACCOUNT_TYPE.MY_ACCOUNT}
+        hasToggle={true}
+        accounts={updatedMyAccounts}
+        isLoading={isLoadingForMyAccounts && isLoadingForBookmark}
+        isError={isErrorForMyAccounts || isErrorForBookmark}
+        errorMessage={errorMyAccounts?.message || errorBookmarks?.message || ""}
+        onClick={handleSelectMyAccount}
+        onAddBookmark={handleAddBookmark}
+        onDeleteBookmark={handleDeleteBookmark}
+      />
+      <AccountToggle
+        type={TRANSFER_ACCOUNT_TYPE.RECENT_TRANSFER_ACCOUNT}
+        hasToggle={false}
+        accounts={updatedRecentTransferAccounts}
+        isLoading={isLoadingForRecentTransferAccounts && isLoadingForBookmark}
+        isError={isErrorForRecentTransferAccounts || isErrorForBookmark}
+        errorMessage={
+          errorRecentTransferAccounts?.message || errorBookmarks?.message || ""
+        }
+        onClick={handleSelectRecentTransferAccount}
+        onAddBookmark={handleAddBookmark}
+        onDeleteBookmark={handleDeleteBookmark}
+      />
+    </div>
   );
 }

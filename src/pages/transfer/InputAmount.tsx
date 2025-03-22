@@ -122,7 +122,17 @@ export default function InputAmount() {
       },
     } as Account;
   }, [transferAccount, transferAccountInfo]);
-
+  /**
+   * 송금 프로세스 중 표기될 이름
+   */
+  const transferProcessNickName = useMemo(() => {
+    if (
+      transferAccountInfo?.account_type === TRANSFER_ACCOUNT_TYPE.MY_ACCOUNT
+    ) {
+      return account?.bank.bank_nickname || "내 계좌";
+    }
+    return account?.holder_name || "";
+  }, [transferAccountInfo, account]);
   /**
    * 송금할 정보
    */
@@ -187,7 +197,7 @@ export default function InputAmount() {
       {isTransferProcessing ? (
         <TransferProcess
           amount={amount}
-          accountName={account?.holder_name || ""}
+          accountName={transferProcessNickName}
         />
       ) : (
         transferAccountInfo && (
