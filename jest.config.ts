@@ -1,9 +1,16 @@
-// jest.config.ts
 import type { Config } from "jest";
 
 const config: Config = {
   preset: "ts-jest/presets/default-esm",
   testEnvironment: "jsdom",
+  moduleNameMapper: {
+    // SVG?react 파일은 mock 파일로 매핑
+    "^@/(.*)\\.svg\\?react$": "<rootDir>/__mocks__/svgReactMock.js",
+    // PNG, JPG 등 이미지 파일들은 fileMock으로 처리
+    "^.+\\.(png|jpg|jpeg|gif|webp)$": "<rootDir>/__mocks__/fileMock.js",
+    // 나머지 alias는 기존처럼 매핑
+    "^@/(.*)$": "<rootDir>/src/$1",
+  },
   testMatch: ["**/__tests__/**/*.[jt]s?(x)", "**/?(*.)+(spec|test).[tj]s?(x)"],
   transform: {
     "^.+\\.tsx?$": [
@@ -22,7 +29,6 @@ const config: Config = {
               options: {
                 metaObjectReplacement: {
                   env: {
-                    // 필요한 환경변수를 여기에 지정합니다.
                     VITE_API_URL: "http://localhost:3001",
                   },
                 },
@@ -32,17 +38,14 @@ const config: Config = {
         },
       },
     ],
+    "^.+\\.svg\\?react$": "<rootDir>/svgTransform.js",
   },
   extensionsToTreatAsEsm: [".ts", ".tsx"],
   setupFiles: ["<rootDir>/src/polyfills.ts"],
   setupFilesAfterEnv: ["<rootDir>/src/setupTests.ts"],
   collectCoverage: true,
   coverageDirectory: "coverage",
-  moduleNameMapper: {
-    "^@/(.*)$": "<rootDir>/src/$1",
-    // SVG를 컴포넌트로 import하는 경우를 mock
-    "\\.svg\\?react$": "<rootDir>/__mocks__/svgReactMock.js",
-  },
+  moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json", "node"],
 };
 
 export default config;

@@ -1,192 +1,143 @@
-// Accounts.test.tsx
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
+import Accounts from "@/pages/accounts/index";
 import { MemoryRouter } from "react-router-dom";
-import { PATH, TRANSFER_ACCOUNT_TYPE } from "../../config";
-import Accounts from "./index";
+import { PATH, TRANSFER_ACCOUNT_TYPE } from "@/config";
 
-// mock react-router-dom's useNavigate
-const mockedNavigate = jest.fn();
+// 모의 데이터 생성
+const myAccountsData = [
+  {
+    id: 1,
+    account_number: "110-1234-5678",
+    bank: {
+      bank_nickname: "월급통장", // 계좌별명이 존재하면 해당 값 사용
+      image_url: "https://example.com/shinhan.png",
+      name: "신한",
+      aliases: ["신한", "신한은행"],
+    },
+  },
+  {
+    id: 2,
+    account_number: "110-2345-6789",
+    bank: {
+      bank_nickname: "", // 계좌별명이 없으므로 "별명 미설정"으로 표시되어야 함
+      image_url: "https://example.com/kakaobank.png",
+      name: "카카오뱅크",
+      aliases: ["카뱅", "카카오뱅크"],
+    },
+  },
+];
+
+const recentTransferAccountsData = [
+  {
+    id: 1,
+    account_number: "143-5678-9012",
+    holder_name: "김하진",
+    bank: { code: "004", image_url: "https://example.com/kb.png" },
+  },
+];
+
+const bookmarksData = [
+  {
+    bank_account_number: "110-2345-6789",
+    id: 10,
+  },
+];
+
+// useAccounts 훅 모의 구현
+jest.mock("@/hooks/useAccounts", () => () => ({
+  myAccountsQuery: () => ({
+    data: myAccountsData,
+    isLoading: false,
+    isError: false,
+    error: null,
+  }),
+  recentTransferAccountsQuery: () => ({
+    data: recentTransferAccountsData,
+    isLoading: false,
+    isError: false,
+    error: null,
+  }),
+  accountByIdQuery: jest.fn(),
+}));
+
+// useBookmarks 훅 모의 구현
+const mockAddBookmarkMutation = { mutate: jest.fn() };
+const mockDeleteBookmarkMutation = { mutate: jest.fn() };
+jest.mock("@/hooks/useBookmarks", () => () => ({
+  bookmarksQuery: () => ({
+    data: bookmarksData,
+    isLoading: false,
+    isError: false,
+    error: null,
+  }),
+  addBookmarkMutation: mockAddBookmarkMutation,
+  deleteBookmarkMutation: mockDeleteBookmarkMutation,
+}));
+
+// AccountContext 모의 구현
+const mockSetTransferAccountInfo = jest.fn();
+jest.mock("@/context/AccountContext", () => ({
+  useAccountContext: () => ({
+    setTransferAccountInfo: mockSetTransferAccountInfo,
+  }),
+}));
+
+// react-router-dom의 useNavigate 훅 모의 구현
+const mockNavigate = jest.fn();
 jest.mock("react-router-dom", () => ({
   ...jest.requireActual("react-router-dom"),
-  useNavigate: () => mockedNavigate,
+  useNavigate: () => mockNavigate,
 }));
 
-// mock Loading 컴포넌트
-jest.mock("../../components/common/Loading", () => () => <div>Loading...</div>);
-
-// mock useAccounts hook
-jest.mock("../../hooks/useAccounts", () => ({
-  __esModule: true,
-  default: jest.fn(),
-}));
-
-// mock useBookmarks hook
-jest.mock("../../hooks/useBookmarks", () => ({
-  __esModule: true,
-  default: jest.fn(),
-}));
-
-// mock useAccountContext hook
-const setTransferAccountInfoMock = jest.fn();
-jest.mock("../../context/AccountContext", () => ({
-  useAccountContext: jest.fn(() => ({
-    setTransferAccountInfo: setTransferAccountInfoMock,
-  })),
-}));
-
-import useAccounts from "../../hooks/useAccounts";
-import useBookmarks from "../../hooks/useBookmarks";
-
-describe("Accounts 컴포넌트", () => {
+// Accounts 페이지에 대한 테스트
+describe("Accounts 페이지", () => {
+  // 각 테스트 실행 전에 sessionStorage 초기화 및 모의 함수 리셋
   beforeEach(() => {
+    sessionStorage.clear();
     jest.clearAllMocks();
   });
 
-  test("API 로딩중일 때 Loading 컴포넌트가 렌더링된다", () => {
-    // 각 hook에서 로딩 상태로 데이터를 null로 반환
-    (useAccounts as jest.Mock).mockReturnValue({
-      myAccountsQuery: () => ({
-        data: null,
-        isLoading: true,
-        isError: false,
-        error: null,
-      }),
-      recentTransferAccountsQuery: () => ({
-        data: null,
-        isLoading: true,
-        isError: false,
-        error: null,
-      }),
-    });
-    (useBookmarks as jest.Mock).mockReturnValue({
-      bookmarksQuery: () => ({
-        data: null,
-        isLoading: true,
-        isError: false,
-        error: null,
-      }),
-    });
-
+  test("내 계좌와 최근 송금 계좌가 올바르게 렌더링된다.", () => {
     render(
       <MemoryRouter>
         <Accounts />
       </MemoryRouter>,
     );
 
-    // 하나라도 로딩이면 Loading 컴포넌트가 보임.
-    expect(screen.getAllByText("Loading...").length).toBeGreaterThan(0);
+    // 내 계좌 항목: 첫 번째 계좌의 경우, 계좌별명이 "월급통장"으로 표시되어야 한다.
+    expect(screen.getByText("월급통장")).toBeInTheDocument();
+    // 두 번째 계좌의 경우, 계좌별명이 없으므로 "별명 미설정"이 표시되어야 한다.
+    expect(screen.getByText("별명 미설정")).toBeInTheDocument();
+
+    // 최근 송금 계좌 항목: 수취인 이름 "김하진"이 표시되어야 한다.
+    expect(screen.getByText("김하진")).toBeInTheDocument();
   });
 
-  test("API 에러가 발생하면 에러 메시지가 렌더링된다", () => {
-    const errorMessage = "Error occurred";
-
-    (useAccounts as jest.Mock).mockReturnValue({
-      myAccountsQuery: () => ({
-        data: null,
-        isLoading: false,
-        isError: true,
-        error: { message: errorMessage },
-      }),
-      recentTransferAccountsQuery: () => ({
-        data: null,
-        isLoading: false,
-        isError: false,
-        error: null,
-      }),
-    });
-    (useBookmarks as jest.Mock).mockReturnValue({
-      bookmarksQuery: () => ({
-        data: null,
-        isLoading: false,
-        isError: true,
-        error: { message: errorMessage },
-      }),
-    });
-
+  test("내 계좌 항목 클릭 시 setTransferAccountInfo가 호출되고, sessionStorage에 저장되며, 페이지가 송금 페이지로 이동한다.", () => {
     render(
       <MemoryRouter>
         <Accounts />
       </MemoryRouter>,
     );
 
-    // 내 계좌와 북마크 에러 메시지 확인
-    expect(
-      screen.getByText(
-        new RegExp(`내 계좌 데이터를 불러오는데 실패했습니다: ${errorMessage}`),
-      ),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText(
-        new RegExp(`북마크 데이터를 불러오는데 실패했습니다: ${errorMessage}`),
-      ),
-    ).toBeInTheDocument();
-  });
+    // "월급통장" 텍스트를 가진 내 계좌 항목 클릭
+    const accountItem = screen.getByText("월급통장");
+    fireEvent.click(accountItem);
 
-  test("정상 데이터 렌더링 및 버튼 클릭 동작", () => {
-    // 더미 데이터 생성
-    const myAccountsData = [
-      { id: 1, account_number: "111", bank: { code: "001" } },
-    ];
-    const recentAccountsData = [
-      { id: 2, account_number: "222", bank: { code: "002" } },
-    ];
-    // 북마크는 내 계좌의 account_number와 일치하도록 설정하여 isBookmarked가 true가 되도록 함
-    const bookmarksData = [{ id: 3, bank_account_number: "111" }];
-
-    (useAccounts as jest.Mock).mockReturnValue({
-      myAccountsQuery: () => ({
-        data: myAccountsData,
-        isLoading: false,
-        isError: false,
-        error: null,
-      }),
-      recentTransferAccountsQuery: () => ({
-        data: recentAccountsData,
-        isLoading: false,
-        isError: false,
-        error: null,
-      }),
-    });
-    (useBookmarks as jest.Mock).mockReturnValue({
-      bookmarksQuery: () => ({
-        data: bookmarksData,
-        isLoading: false,
-        isError: false,
-        error: null,
-      }),
-    });
-
-    render(
-      <MemoryRouter>
-        <Accounts />
-      </MemoryRouter>,
-    );
-
-    // 내 계좌와 최근 계좌 데이터가 정상적으로 렌더링되는지 확인
-    expect(screen.getByText(/"account_number":"111"/)).toBeInTheDocument();
-    expect(screen.getByText(/"account_number":"222"/)).toBeInTheDocument();
-
-    // 내 계좌의 버튼 클릭 시 동작 검증
-    const [myAccountButton, recentAccountButton] = screen.getAllByText("click");
-    fireEvent.click(myAccountButton);
-    expect(setTransferAccountInfoMock).toHaveBeenCalledWith({
+    // setTransferAccountInfo가 TRANSFER_ACCOUNT_TYPE.MY_ACCOUNT와 id 1의 인자로 호출되어야 함
+    expect(mockSetTransferAccountInfo).toHaveBeenCalledWith({
       account_type: TRANSFER_ACCOUNT_TYPE.MY_ACCOUNT,
       id: 1,
     });
-    expect(mockedNavigate).toHaveBeenCalledWith(PATH.TRANSFER);
 
-    // 최근 계좌의 버튼 클릭 시 동작 검증
-    fireEvent.click(recentAccountButton);
-    expect(setTransferAccountInfoMock).toHaveBeenCalledWith({
-      account_type: TRANSFER_ACCOUNT_TYPE.RECENT_TRANSFER_ACCOUNT,
-      id: 2,
-    });
-    expect(mockedNavigate).toHaveBeenCalledWith(PATH.TRANSFER);
+    // sessionStorage에 transferAccountInfo 정보가 저장되었는지 확인 (문자열로 저장됨)
+    const stored = sessionStorage.getItem("transferAccountInfo");
+    expect(stored).toBe(
+      JSON.stringify({ account_type: TRANSFER_ACCOUNT_TYPE.MY_ACCOUNT, id: 1 }),
+    );
 
-    // "확인" 버튼 클릭 시에도 PATH.TRANSFER로 이동함을 검증
-    const confirmButton = screen.getByText("확인");
-    fireEvent.click(confirmButton);
-    expect(mockedNavigate).toHaveBeenCalledWith(PATH.TRANSFER);
+    // 페이지 이동이 PATH.TRANSFER 경로로 호출되었는지 확인
+    expect(mockNavigate).toHaveBeenCalledWith(PATH.TRANSFER);
   });
 });

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Account, TransferAccountType } from "@/types";
 import IconButton from "@/components/common/IconButton";
 import LoadingCard from "@/components/common/LoadingCard";
@@ -105,9 +105,9 @@ export default function AccountToggle({
         <motion.ul initial={false}>
           <AnimatePresence initial={false}>
             {visibleAccounts &&
-              visibleAccounts.map((acc) => (
+              visibleAccounts.map((acc, index) => (
                 <motion.li
-                  key={acc.id}
+                  key={`${acc.id}-${index}`}
                   layout
                   initial={{
                     height: 0,
