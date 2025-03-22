@@ -18,6 +18,7 @@ import BankLogo from "@/components/common/BankLogo";
 import IconSafe from "@/assets/icons/icon_safe_blue.svg?react";
 import TransferProcess from "@/pages/transfer/TransferProcess";
 import AlertTooltip from "@/components/common/AlertTooltip";
+import { formatToWon } from "@/utils";
 
 export default function InputAmount() {
   const navigate = useNavigate();
@@ -80,9 +81,9 @@ export default function InputAmount() {
   let limitExceededAmountText = "";
 
   if (isLimitExceededOneTimeAmount) {
-    limitExceededAmountText = `${ONE_TIME_AMOUNT}원 송금 가능 (1회 한도 초과)`;
+    limitExceededAmountText = `${formatToWon(ONE_TIME_AMOUNT)}원 송금 가능 (1회 한도 초과)`;
   } else if (isLimitExceededOneDayAmount) {
-    limitExceededAmountText = `${remainTransferOneDayAmount}원 송금 가능 (1일 한도 초과)`;
+    limitExceededAmountText = `${formatToWon(remainTransferOneDayAmount)}원 송금 가능 (1일 한도 초과)`;
   }
   // 송금 금액 초과 유무
   const isLimitExceededAmount =
@@ -201,7 +202,7 @@ export default function InputAmount() {
                     tooltipText={limitExceededAmountText}
                     visible={isLimitExceededAmount}
                   >
-                    <p className="text-2xl font-semibold">{`${amount}원`}</p>
+                    <p className="text-2xl font-semibold">{`${formatToWon(amount)}원`}</p>
                   </AlertTooltip>
                 ) : (
                   <p className="text-2xl font-semibold opacity-15">
