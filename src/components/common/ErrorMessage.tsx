@@ -18,7 +18,7 @@ export default function ErrorMessage({
       />
 
       <p className="font-semibold">{title}</p>
-      <p className="text-[#FF3C3C] whitespace-pre-line text-center text-sm">
+      <p className="text-alert whitespace-pre-line text-center text-sm">
         {message}
       </p>
     </div>

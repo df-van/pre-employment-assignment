@@ -5,6 +5,7 @@ import Image from "@/assets/images/img_failed.png";
 import ImageX2 from "@/assets/images/img_failed_x2.png";
 import BottomAreaWrapper from "@/components/common/BottomAreaWrapper";
 import ConfirmButton from "@/components/common/ConfirmButton";
+import ImgSrcSet from "@/components/common/ImgSrcSet";
 
 export default function ErrorBoundary() {
   const navigate = useNavigate();
@@ -13,13 +14,14 @@ export default function ErrorBoundary() {
   };
   return (
     <main className="flex flex-col h-screen">
-      <TopAreaWrapper
-        images={[Image, ImageX2]}
-        alt="송금 실패"
-        className="flex-1"
-      >
+      <TopAreaWrapper className="flex-1">
+        <ImgSrcSet
+          images={[Image, ImageX2]}
+          alt="송금 실패"
+          className="w-[112px] h-[112px]"
+        />
         <p className="text-xl font-semibold">예상치 못한 오류 발생</p>
-        <p className="text-[#FF3C3C] whitespace-pre-line text-center">
+        <p className="text-alert whitespace-pre-line text-center">
           {`문제가 발생했습니다. 다시 시도해 주세요.`}
         </p>
       </TopAreaWrapper>

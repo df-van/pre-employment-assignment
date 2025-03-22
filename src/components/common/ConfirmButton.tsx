@@ -10,7 +10,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 }
 const variantClasses: Record<ButtonVariant, string> = {
   primary: "bg-[#FFEB00] hover:bg-yellow-400 text-[#060B11]",
-  danger: "bg-[#FFD8D8] hover:bg-red-400 text-[#FF3C3C]",
+  danger: "bg-[#FFD8D8] hover:bg-red-200 text-alert",
 };
 const disabledClasses = "opacity-50 cursor-not-allowed";
 

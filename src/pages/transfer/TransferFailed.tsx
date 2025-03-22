@@ -6,6 +6,8 @@ import ConfirmButton from "@/components/common/ConfirmButton";
 import BottomAreaWrapper from "@/components/common/BottomAreaWrapper";
 import TopAreaWrapper from "@/components/common/TopAreaWrapper";
 import { useMemo } from "react";
+import ImgSrcSet from "@/components/common/ImgSrcSet";
+import { motion } from "framer-motion";
 
 export default function TransferFailed() {
   const navigate = useNavigate();
@@ -48,13 +50,16 @@ export default function TransferFailed() {
   };
   return (
     <>
-      <TopAreaWrapper
-        images={[Image, ImageX2]}
-        alt="송금 실패"
-        className="flex-1"
-      >
+      <TopAreaWrapper className="flex-1">
+        <motion.div initial={{ scale: 0 }} animate={{ scale: 1, rotateZ: 360 }}>
+          <ImgSrcSet
+            images={[Image, ImageX2]}
+            alt="송금 실패"
+            className="w-[112px] h-[112px]"
+          />
+        </motion.div>
         <p className="text-xl font-semibold"> {title}</p>
-        <p className="text-[#FF3C3C] whitespace-pre-line text-center">
+        <p className="text-alert whitespace-pre-line text-center">
           {description}
         </p>
       </TopAreaWrapper>

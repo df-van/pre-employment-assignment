@@ -38,6 +38,11 @@ const config: Config = {
   setupFilesAfterEnv: ["<rootDir>/src/setupTests.ts"],
   collectCoverage: true,
   coverageDirectory: "coverage",
+  moduleNameMapper: {
+    "^@/(.*)$": "<rootDir>/src/$1",
+    // SVG를 컴포넌트로 import하는 경우를 mock
+    "\\.svg\\?react$": "<rootDir>/__mocks__/svgReactMock.js",
+  },
 };
 
 export default config;

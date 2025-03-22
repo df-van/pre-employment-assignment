@@ -7,7 +7,7 @@ import {
 } from "@/config";
 import useAccounts from "@/hooks/useAccounts";
 import { useAccountContext } from "@/context/AccountContext";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import useTransfer from "@/hooks/useTransfer";
 import { Account, Transfer } from "@/types";
 import ConfirmButton from "@/components/common/ConfirmButton";
@@ -28,6 +28,7 @@ export default function InputAmount() {
   const [amount, setAmount] = useState(0);
   const [isLimitExceededAmount, setIsLimitExceededAmount] = useState(false);
   const [isTransferProcessing, setIsTransferProcessing] = useState(false);
+  const isShortcutUpdate = useRef(false);
 
   /**
    * 계좌 정보 불러오기
@@ -121,6 +122,7 @@ export default function InputAmount() {
    * shortcut amount 버튼 이벤트
    */
   const handleAddAmount = (amount: number) => {
+    isShortcutUpdate.current = true;
     setAmount((prevAmount) => prevAmount + amount);
   };
 
@@ -128,6 +130,7 @@ export default function InputAmount() {
    * number keypad 버튼 이벤트
    */
   const handleUpdateAmount = (value: number | "delete") => {
+    isShortcutUpdate.current = false;
     setAmount((prevAmount) => {
       const currentStr = prevAmount.toString();
       if (value === "delete") {
@@ -182,6 +185,7 @@ export default function InputAmount() {
       <TransferAccountInfo
         account={account}
         amount={amount}
+        isShortcutUpdate={isShortcutUpdate.current}
         myInfo={myInfo}
         isLoading={isLoadingForTransferAccount && isLoadingForMyInfo}
         isError={isErrorForTransferAccount || isErrorForMyInfo}

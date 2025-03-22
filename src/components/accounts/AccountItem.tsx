@@ -3,6 +3,7 @@ import IconButton from "@/components/common/IconButton";
 import React, { useMemo } from "react";
 import BankLogo from "@/components/common/BankLogo";
 import { TRANSFER_ACCOUNT_TYPE } from "@/config";
+import { motion } from "framer-motion";
 
 export default function AccountItem({
   type,
@@ -37,7 +38,28 @@ export default function AccountItem({
   };
 
   return (
-    <div className="px-3 bg-white">
+    <motion.div
+      initial={{
+        opacity: 0,
+        y: -10,
+        scale: 0.98,
+        filter: "blur(4px)",
+      }}
+      animate={{
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        filter: "blur(0px)",
+      }}
+      exit={{
+        opacity: 0,
+        y: -10,
+        scale: 0.98,
+        filter: "blur(4px)",
+      }}
+      transition={{ duration: 0.1, ease: "easeOut" }}
+      className="px-3 bg-white"
+    >
       <IconButton
         className="inline-flex w-full justify-between items-center p-3 space-x-3 rounded-xl"
         onClick={handlerClick}
@@ -73,6 +95,6 @@ export default function AccountItem({
           </svg>
         </div>
       </IconButton>
-    </div>
+    </motion.div>
   );
 }

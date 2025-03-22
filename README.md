@@ -1,35 +1,11 @@
 # 카카오페이 Frontend 사전과제
 
-카카오페이 frontend 사전과제를 위한 템플릿입니다. 과제를 해결하기 위한 전략 및 아키텍쳐들을 작성해주세요.
-#### 추가 설치 목록
-    prettier
-    react-router-dom  
-    axios
-    @tanstack/react-query
-    @tanstack/react-query-devtools@latest
-    jest
-    ts-jest
-    ts-jest-mock-import-meta
-    ts-node
-    jest-environment-jsdom
-    @babel/preset-typescript
-    @testing-library/dom
-    @testing-library/jest-dom
-    @testing-library/react
-    @types/jest
-    @types/node
-    @types/react
-    @types/react-dom
-    vite-plugin-svgr : vite 환경에서 svg 파일을 react 컴포넌트로 변환해주는 플러그인
-    tailwindcss
-    postcss
-    autoprefixer
-
 ### Router 구조
     / : home (에러 발생 : ErrorBoundary)
     ├── /accounts : 계좌 목록
     ├── /transfer : 송금
     ├──    ├──  input-amount : 송금 금액 입력
+    ├──    ├──  process : 송금 중
     ├──    ├──  complete : 송금 완료 화면
     ├──    └──  failed : 송금 실패
     └── /not-found : 알 수 없는 주소
@@ -62,7 +38,8 @@
 ### 에러 및 예외 처리
     loading시, error 발생 시, data가 누락될 경우에 대한 페이지 별 예외 처리함. 
     data 가 없을 경우 페이지의 성격에 따라 sessionStorage 를 이용하여 데이타를 불러올 수 있게 처리 또는 리다이렉트 처리
-
+### 트랜지션 및 애니메이션 작업
+    ux 경험 만족도를 향상을 위해 framer motion으로 트랜지션 및 애니메이션 추가
 
 
 

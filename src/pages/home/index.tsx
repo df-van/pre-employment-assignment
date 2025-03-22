@@ -4,6 +4,8 @@ import BottomAreaWrapper from "@/components/common/BottomAreaWrapper";
 import Image from "@/assets/images/img_process.png";
 import ImageX2 from "@/assets/images/img_process_x2.png";
 import TopAreaWrapper from "@/components/common/TopAreaWrapper";
+import ImgSrcSet from "@/components/common/ImgSrcSet";
+import { motion } from "framer-motion";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -13,7 +15,14 @@ export default function Home() {
   };
   return (
     <>
-      <TopAreaWrapper images={[Image, ImageX2]} alt="홈" className="flex-1">
+      <TopAreaWrapper className="flex-1">
+        <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }}>
+          <ImgSrcSet
+            images={[Image, ImageX2]}
+            alt="홈"
+            className="w-[112px] h-[112px]"
+          />
+        </motion.div>
         <p className="text-xl font-semibold text-center">
           송금을 시작하려면
           <br /> 받을 계좌 선택 페이지로 이동하세요.

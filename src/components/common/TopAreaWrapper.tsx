@@ -1,23 +1,23 @@
 import { ReactNode } from "react";
-import ImgSrcSet from "@/components/common/ImgSrcSet";
+import { motion } from "framer-motion";
 
 export default function TopAreaWrapper({
-  images,
-  alt,
   children,
   className,
 }: {
-  images: string[];
-  alt: string;
   children: ReactNode;
   className?: string;
 }) {
   return (
-    <div className={`${className || ""}`}>
+    <motion.div
+      className={`${className || ""}`}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.2 }}
+    >
       <div className="flex flex-col justify-center items-center mt-10 space-y-5">
-        <ImgSrcSet images={images} alt={alt} />
         {children}
       </div>
-    </div>
+    </motion.div>
   );
 }
