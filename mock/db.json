@@ -14,7 +14,7 @@
           "신한",
           "신한은행"
         ],
-        "bank_nickname": ""
+        "bank_nickname": "월급통장"
       }
     },
     {
@@ -67,7 +67,7 @@
           "국민",
           "국민은행"
         ],
-        "bank_nickname": ""
+        "bank_nickname": "주식계좌"
       }
     },
     {
@@ -114,6 +114,33 @@
       "bank": {
         "code": "032",
         "image_url": "https://t1.daumcdn.net/kakaopay/assignment/frontend/assets/hana.png"
+      }
+    },
+    {
+      "id": 4,
+      "account_number": "143-7990-1264",
+      "holder_name": "정혜진",
+      "bank": {
+        "code": "011",
+        "image_url": "https://t1.daumcdn.net/kakaopay/assignment/frontend/assets/nh.png"
+      }
+    },
+    {
+      "id": 5,
+      "account_number": "143-7832-1238",
+      "holder_name": "정혜진",
+      "bank": {
+        "code": "004",
+        "image_url": "https://t1.daumcdn.net/kakaopay/assignment/frontend/assets/kb.png"
+      }
+    },
+    {
+      "id": 6,
+      "account_number": "143-7563-4232",
+      "holder_name": "정혜진",
+      "bank": {
+        "code": "090",
+        "image_url": "https://t1.daumcdn.net/kakaopay/assignment/frontend/assets/kakaobank.png"
       }
     }
   ],

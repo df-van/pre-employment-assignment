@@ -49,13 +49,23 @@ export default function InputAmount() {
   const [isTransferProcessing, setIsTransferProcessing] = useState(false);
 
   /**
-   * 선택한 계좌 정보가 없을 경우 계좌 목록으로 리다이렉트
+   * 컴포넌트 마운트 시 sessionStorage 에서 transferAccountInfo 를 불러옴
    */
   useEffect(() => {
     if (!transferAccountInfo && !isTransferProcessing) {
-      navigate(PATH.ACCOUNTS, { replace: true });
+      const info = sessionStorage.getItem("transferAccountInfo");
+      if (info) {
+        setTransferAccountInfo(JSON.parse(info));
+      } else {
+        navigate(PATH.ACCOUNTS, { replace: true });
+      }
     }
-  }, [transferAccountInfo, navigate, isTransferProcessing]);
+  }, [
+    transferAccountInfo,
+    isTransferProcessing,
+    navigate,
+    setTransferAccountInfo,
+  ]);
 
   /**
    * 1일 송금 가능한 한도 금액
@@ -180,50 +190,52 @@ export default function InputAmount() {
           accountName={account?.holder_name || ""}
         />
       ) : (
-        <>
-          <div className="flex-1 flex justify-center items-center">
-            <div className="text-center space-y-4">
-              <div className="flex flex-col items-center space-y-1">
-                <BankLogo
-                  url={account?.bank.image_url}
-                  alias={account?.bank.aliases}
-                />
-                <span className="inline-flex items-center space-x-1">
-                  <span className="text-sm opacity-55">
-                    {`${account?.bank.name} ${account?.account_number}`}
+        transferAccountInfo && (
+          <>
+            <div className="flex-1 flex justify-center items-center">
+              <div className="text-center space-y-4">
+                <div className="flex flex-col items-center space-y-1">
+                  <BankLogo
+                    url={account?.bank.image_url}
+                    alias={account?.bank.aliases}
+                  />
+                  <span className="inline-flex items-center space-x-1">
+                    <span className="text-sm opacity-55">
+                      {`${account?.bank.name} ${account?.account_number}`}
+                    </span>
+                    <IconSafe />
                   </span>
-                  <IconSafe />
-                </span>
-              </div>
-              <div>
-                <p className="text-2xl font-semibold">{`${account?.holder_name} 님에게`}</p>
-                {amount ? (
-                  <AlertTooltip
-                    tooltipText={limitExceededAmountText}
-                    visible={isLimitExceededAmount}
-                  >
-                    <p className="text-2xl font-semibold">{`${formatToWon(amount)}원`}</p>
-                  </AlertTooltip>
-                ) : (
-                  <p className="text-2xl font-semibold opacity-15">
-                    얼마를 보낼까요?
-                  </p>
-                )}
-                <span className="opacity-40 text-sm pt-2">{`출금계좌: ${myInfo?.account.bank.name} ${myInfo?.account.account_number}(${myInfo?.account.balance}원)`}</span>
+                </div>
+                <div>
+                  <p className="text-2xl font-semibold">{`${account?.holder_name} 님에게`}</p>
+                  {amount ? (
+                    <AlertTooltip
+                      tooltipText={limitExceededAmountText}
+                      visible={isLimitExceededAmount}
+                    >
+                      <p className="text-2xl font-semibold">{`${formatToWon(amount)}원`}</p>
+                    </AlertTooltip>
+                  ) : (
+                    <p className="text-2xl font-semibold opacity-15">
+                      얼마를 보낼까요?
+                    </p>
+                  )}
+                  <span className="opacity-40 text-sm pt-2">{`출금계좌: ${myInfo?.account.bank.name} ${myInfo?.account.account_number}(${myInfo?.account.balance}원)`}</span>
+                </div>
               </div>
             </div>
-          </div>
-          <BottomAreaWrapper>
-            <NumberShortcut onAddAmount={handleAddAmount} />
-            <NumberKeypad onUpdateAmount={handleUpdateAmount} />
-            <ConfirmButton
-              onClick={handleConfirm}
-              disabled={!amount || isLimitExceededAmount}
-            >
-              확인
-            </ConfirmButton>
-          </BottomAreaWrapper>
-        </>
+            <BottomAreaWrapper>
+              <NumberShortcut onAddAmount={handleAddAmount} />
+              <NumberKeypad onUpdateAmount={handleUpdateAmount} />
+              <ConfirmButton
+                onClick={handleConfirm}
+                disabled={!amount || isLimitExceededAmount}
+              >
+                확인
+              </ConfirmButton>
+            </BottomAreaWrapper>
+          </>
+        )
       )}
     </>
   );

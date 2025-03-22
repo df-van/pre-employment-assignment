@@ -7,7 +7,7 @@ import {
 } from "@/config";
 import useAccounts from "@/hooks/useAccounts";
 import useBookmarks from "@/hooks/useBookmarks";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { Account, BookmarkAccount, RecentTransferAccount } from "@/types";
 import { useAccountContext } from "@/context/AccountContext";
 import LoadingCard from "@/components/common/LoadingCard";
@@ -40,6 +40,13 @@ export default function Accounts() {
   } = bookmarksQuery();
 
   const { setTransferAccountInfo } = useAccountContext();
+
+  /**
+   * 마운트시 sessionStorage clear
+   */
+  useEffect(() => {
+    sessionStorage.removeItem("transferAccountInfo");
+  }, []);
 
   /**
    * API 에러 케이스 처리: 하나라도 에러가 발생하면 에러 메시지 렌더링
@@ -121,20 +128,23 @@ export default function Accounts() {
 
   /**
    * 송금 계좌 선택 버튼 이벤트
-   * @param id
    */
   const handleSelectMyAccount = (id: number) => {
-    setTransferAccountInfo({
+    const info = {
       account_type: TRANSFER_ACCOUNT_TYPE.MY_ACCOUNT,
       id,
-    });
+    };
+    setTransferAccountInfo(info);
+    sessionStorage.setItem("transferAccountInfo", JSON.stringify(info));
     navigate(PATH.TRANSFER);
   };
   const handleSelectRecentTransferAccount = (id: number) => {
-    setTransferAccountInfo({
+    const info = {
       account_type: TRANSFER_ACCOUNT_TYPE.RECENT_TRANSFER_ACCOUNT,
       id,
-    });
+    };
+    setTransferAccountInfo(info);
+    sessionStorage.setItem("transferAccountInfo", JSON.stringify(info));
     navigate(PATH.TRANSFER);
   };
   /**

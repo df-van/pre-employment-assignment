@@ -45,7 +45,8 @@
     DEFAULT_BANK_INFO : 은행 코드가 없을 경우의 기본 은행 정보
 ### 송금 계좌 id 와 type 은 context api 로 관리
     계좌 id 정보와 내 계좌, 최근 사용 계좌 인지에 대한 정보
-    localStorage 방식과 url query 방식 중 context api로 일단 진행 -> localStorage 방식으로 변경 예정
+    context api로 정보를 관리 송금 금액입력 페이지에서 리프레시 하더라도 정보를 유지하도록 하기 위해 ->
+    sessionStorage에 저장해둠 -> 송금 금액 입력 페이지 리프레시 storage 정보 유무 판단하여 정보를 context api에 전달 또는 리다이렉트 처리
 ### 공용 헤더 정보 route 메타 정보로 관리
     뒤로 가기 버튼 path 값과 타이틀 정보
 ### Jest 와 Testing Library 를 이용하여 주요 컴포넌트 테스트
