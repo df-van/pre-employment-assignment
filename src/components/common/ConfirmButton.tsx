@@ -12,7 +12,7 @@ const variantClasses: Record<ButtonVariant, string> = {
   primary: "bg-[#FFEB00] hover:bg-yellow-400 text-[#060B11]",
   danger: "bg-[#FFD8D8] hover:bg-red-200 text-alert",
 };
-const disabledClasses = "opacity-50 cursor-not-allowed";
+const disabledClasses = "opacity-40 cursor-not-allowed";
 
 export default function ConfirmButton({
   variant = "primary",

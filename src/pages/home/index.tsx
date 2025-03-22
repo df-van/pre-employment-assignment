@@ -6,9 +6,17 @@ import ImageX2 from "@/assets/images/img_process_x2.png";
 import TopAreaWrapper from "@/components/common/TopAreaWrapper";
 import ImgSrcSet from "@/components/common/ImgSrcSet";
 import { motion } from "framer-motion";
+import { useEffect } from "react";
 
 export default function Home() {
   const navigate = useNavigate();
+
+  /**
+   * 마운트시 sessionStorage clear
+   */
+  useEffect(() => {
+    sessionStorage.removeItem("transferAccountInfo");
+  }, []);
 
   const handleGoToAccounts = () => {
     navigate("/accounts");

@@ -32,7 +32,7 @@ export default function NumberKeypad({
           {id !== "blank" && (
             <IconButton
               className="w-full py-1 rounded-xl"
-              disabled={disabled}
+              disabled={id !== "delete" && disabled}
               onClick={() => handleClick(value)}
             >
               {id === "delete" ? (
