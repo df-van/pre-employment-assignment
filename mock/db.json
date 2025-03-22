@@ -150,16 +150,16 @@
       "id": 9
     },
     {
-      "bank_account_number": "143-5678-9012",
-      "id": 12
-    },
-    {
       "bank_account_number": "143-6789-0123",
       "id": 15
     },
     {
       "bank_account_number": "110-1234-5678",
       "id": 16
+    },
+    {
+      "bank_account_number": "143-5678-9012",
+      "id": 17
     }
   ],
   "limits": [
@@ -191,7 +191,7 @@
   },
   "transfer": {
     "bank_code": "004",
-    "account_number": "143-7832-1238",
-    "amount": 96
+    "account_number": "143-5678-9012",
+    "amount": 10000
   }
 }

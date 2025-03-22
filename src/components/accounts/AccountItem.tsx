@@ -46,28 +46,7 @@ export default function AccountItem({
   };
 
   return (
-    <motion.div
-      initial={{
-        opacity: 0,
-        y: -10,
-        scale: 0.98,
-        filter: "blur(4px)",
-      }}
-      animate={{
-        opacity: 1,
-        y: 0,
-        scale: 1,
-        filter: "blur(0px)",
-      }}
-      exit={{
-        opacity: 0,
-        y: -10,
-        scale: 0.98,
-        filter: "blur(4px)",
-      }}
-      transition={{ duration: 0.1, ease: "easeOut" }}
-      className="px-3 bg-white"
-    >
+    <div className="px-3 bg-white">
       <IconButton
         className="inline-flex w-full justify-between items-center p-3 space-x-3 rounded-xl"
         onClick={handlerClick}
@@ -104,6 +83,6 @@ export default function AccountItem({
           </motion.svg>
         </div>
       </IconButton>
-    </motion.div>
+    </div>
   );
 }

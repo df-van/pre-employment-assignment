@@ -41,6 +41,7 @@ export default function AccountToggle({
     }
     return accounts.slice(0, 2);
   }, [isOpen, accounts, hasToggle]);
+
   /**
    * 내 계좌 갯수
    */
@@ -101,34 +102,30 @@ export default function AccountToggle({
       </div>
       {isLoading && <LoadingCard />}
       {isError && <ErrorMessage message={errorMessage} />}
-      {!isLoading && !isError && (
+      {!isLoading && !isError && visibleAccounts && (
         <motion.ul initial={false}>
           <AnimatePresence initial={false}>
-            {visibleAccounts &&
-              visibleAccounts.map((acc, index) => (
-                <motion.li
-                  key={`${acc.id}-${index}`}
-                  layout
-                  initial={{
-                    height: 0,
-                    opacity: 0,
-                  }}
-                  animate={{ height: "auto", opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  transition={{
-                    duration: 0.2,
-                    ease: "easeOut",
-                  }}
-                >
-                  <AccountItem
-                    type={type}
-                    info={acc}
-                    onClick={onClick}
-                    onAddBookmark={onAddBookmark}
-                    onDeleteBookmark={onDeleteBookmark}
-                  />
-                </motion.li>
-              ))}
+            {visibleAccounts.map((acc, index) => (
+              <motion.li
+                key={`${acc.id}-${index}`}
+                layout
+                initial={{ height: isOpen ? 0 : "auto", opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{
+                  duration: 0.2,
+                  ease: "easeOut",
+                }}
+              >
+                <AccountItem
+                  type={type}
+                  info={acc}
+                  onClick={onClick}
+                  onAddBookmark={onAddBookmark}
+                  onDeleteBookmark={onDeleteBookmark}
+                />
+              </motion.li>
+            ))}
           </AnimatePresence>
         </motion.ul>
       )}
