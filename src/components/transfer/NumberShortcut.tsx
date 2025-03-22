@@ -1,6 +1,8 @@
 export default function NumberShortcut({
+  disabled,
   onAddAmount,
 }: {
+  disabled: boolean;
   onAddAmount: (amount: number) => void;
 }) {
   const SHORTCUTS = [
@@ -19,7 +21,8 @@ export default function NumberShortcut({
       {SHORTCUTS.map(({ id, text, value }) => (
         <li key={id}>
           <button
-            className="w-full p-1.5 rounded-full text-sm text-default text-opacity-55 bg-secondary hover:bg-gray-300 hover:duration-100 duration-300 transition-all "
+            className={`w-full p-1.5 rounded-full text-sm text-default text-opacity-55 ${disabled ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-300 hover:duration-100 duration-300 transition-all"} bg-secondary`}
+            disabled={disabled}
             onClick={() => handleClick(value)}
           >
             {text}

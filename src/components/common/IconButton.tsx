@@ -7,6 +7,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 
 export default function IconButton({
   children,
+  disabled,
   onClick,
   className,
   ...props
@@ -16,7 +17,8 @@ export default function IconButton({
   };
   return (
     <button
-      className={`flex justify-center items-center rounded hover:bg-hover hover:duration-200 duration-[400ms] transition-all ${className}`}
+      className={`flex justify-center items-center rounded ${disabled ? "opacity-50 cursor-not-allowed" : "hover:bg-hover hover:duration-200 duration-[400ms] transition-all"} ${className}`}
+      disabled={disabled}
       onClick={handleClick}
       {...props}
     >

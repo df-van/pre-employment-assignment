@@ -137,16 +137,41 @@ export default function TransferAccountInfo({
                 initial="initial"
                 animate={isLimitExceeded ? "vibrate" : "initial"}
               >
-                {displayed.map((char, idx) => (
-                  <motion.span
-                    key={`${char}-${idx}-${keyVersion}`}
-                    initial={{ y: -10, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{ duration: isLimitExceeded ? 0 : 0.15 }}
-                  >
-                    {char}
-                  </motion.span>
-                ))}
+                {displayed.map((char, i, array) => {
+                  const total = array.length;
+                  const idxFromRight = total - 1 - i;
+                  const shouldInsertComma = i !== 0 && idxFromRight % 3 === 2;
+
+                  return (
+                    <React.Fragment key={`group-${keyVersion}-${i}`}>
+                      {shouldInsertComma && (
+                        <motion.span
+                          key={`comma-${keyVersion}-${i}`}
+                          initial={{ y: -10, opacity: 0 }}
+                          animate={{ y: 0, opacity: 1 }}
+                          exit={{ y: 10, opacity: 0 }}
+                          transition={{
+                            duration:
+                              isLimitExceeded || !isShortcutUpdate ? 0 : 0.15,
+                          }}
+                          className="inline-block"
+                        >
+                          ,
+                        </motion.span>
+                      )}
+                      <motion.span
+                        key={`digit-${keyVersion}-${i}`}
+                        initial={{ y: -10, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        exit={{ y: 10, opacity: 0 }}
+                        transition={{ duration: isLimitExceeded ? 0 : 0.15 }}
+                        className="inline-block"
+                      >
+                        {char}
+                      </motion.span>
+                    </React.Fragment>
+                  );
+                })}
                 <motion.span
                   key="unit"
                   initial={{ opacity: 0 }}

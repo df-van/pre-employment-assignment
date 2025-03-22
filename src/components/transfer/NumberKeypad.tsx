@@ -2,8 +2,10 @@ import IconLeft from "@/assets/icons/icon_header_left.svg?react";
 import IconButton from "@/components/common/IconButton";
 
 export default function NumberKeypad({
+  disabled,
   onUpdateAmount,
 }: {
+  disabled: boolean;
   onUpdateAmount: (value: number | "delete") => void;
 }) {
   const KEYS: { id: string; text: string; value: number | "delete" }[] = [
@@ -30,6 +32,7 @@ export default function NumberKeypad({
           {id !== "blank" && (
             <IconButton
               className="w-full py-1 rounded-xl"
+              disabled={disabled}
               onClick={() => handleClick(value)}
             >
               {id === "delete" ? (

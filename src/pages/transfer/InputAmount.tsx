@@ -195,8 +195,14 @@ export default function InputAmount() {
         setIsLimitExceededAmount={setIsLimitExceededAmount}
       />
       <BottomAreaWrapper>
-        <NumberShortcut onAddAmount={handleAddAmount} />
-        <NumberKeypad onUpdateAmount={handleUpdateAmount} />
+        <NumberShortcut
+          disabled={isLimitExceededAmount}
+          onAddAmount={handleAddAmount}
+        />
+        <NumberKeypad
+          disabled={isLimitExceededAmount}
+          onUpdateAmount={handleUpdateAmount}
+        />
         <ConfirmButton
           onClick={handleConfirm}
           disabled={!amount || isLimitExceededAmount}
