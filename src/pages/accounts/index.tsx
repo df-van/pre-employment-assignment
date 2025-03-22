@@ -140,7 +140,7 @@ export default function Accounts() {
         hasToggle={true}
         accounts={updatedMyAccounts}
         isLoading={isLoadingForMyAccounts && isLoadingForBookmark}
-        isError={isErrorForMyAccounts || isErrorForBookmark}
+        isError={isErrorForMyAccounts && isLoadingForBookmark}
         errorMessage={errorMyAccounts?.message || errorBookmarks?.message || ""}
         onClick={handleSelectMyAccount}
         onAddBookmark={handleAddBookmark}

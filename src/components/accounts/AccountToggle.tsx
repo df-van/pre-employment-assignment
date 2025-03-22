@@ -5,6 +5,7 @@ import LoadingCard from "@/components/common/LoadingCard";
 import AccountItem from "@/components/accounts/AccountItem";
 import { TRANSFER_ACCOUNT_TYPE } from "@/config";
 import IconArrowUp from "@/assets/icons/icon_arrow_up.svg?react";
+import ErrorMessage from "@/components/common/ErrorMessage";
 
 export default function AccountToggle({
   type,
@@ -65,7 +66,7 @@ export default function AccountToggle({
     <section>
       <div className="flex justify-between items-center px-6 py-2">
         <h4 className="text-sm">{label}</h4>
-        {hasToggle && (
+        {!isError && hasToggle && (
           <div className="inline-flex items-center">
             <span className="opacity-55 text-sm">{textMyAccounts}</span>
             <IconButton onClick={onToggleOpen}>
@@ -80,6 +81,8 @@ export default function AccountToggle({
       </div>
       {isLoading ? (
         <LoadingCard />
+      ) : isError ? (
+        <ErrorMessage message={errorMessage} />
       ) : (
         <ul>
           {visibleAccounts &&

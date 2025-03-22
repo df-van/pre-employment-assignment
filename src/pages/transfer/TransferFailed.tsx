@@ -55,7 +55,6 @@ export default function TransferFailed() {
       >
         <p className="text-xl font-semibold"> {title}</p>
         <p className="text-[#FF3C3C] whitespace-pre-line text-center">
-          {" "}
           {description}
         </p>
       </TopAreaWrapper>

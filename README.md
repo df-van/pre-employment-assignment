@@ -59,6 +59,9 @@
     myInfo, transferAccount, transfer 정보는 리액트 쿼리 캐시에 저장
 ### 의문점
     내 계좌에서 계좌 별명 연결 데이타에 대한 확신이 없었음 -> banck_nickname 으로 연결하여 처리
+### 에러 및 예외 처리
+    loading시, error 발생 시, data가 누락될 경우에 대한 페이지 별 예외 처리함. 
+    data 가 없을 경우 페이지의 성격에 따라 sessionStorage 를 이용하여 데이타를 불러올 수 있게 처리 또는 리다이렉트 처리
 
 
 

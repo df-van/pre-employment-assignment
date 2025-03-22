@@ -14,39 +14,41 @@ import ConfirmButton from "@/components/common/ConfirmButton";
 import BottomAreaWrapper from "@/components/common/BottomAreaWrapper";
 import NumberKeypad from "@/components/transfer/NumberKeypad";
 import NumberShortcut from "@/components/transfer/NumberShortcut";
-import BankLogo from "@/components/common/BankLogo";
-import IconSafe from "@/assets/icons/icon_safe_blue.svg?react";
+
 import TransferProcess from "@/pages/transfer/TransferProcess";
-import AlertTooltip from "@/components/common/AlertTooltip";
-import { formatToWon } from "@/utils";
+import TransferAccountInfo from "@/components/transfer/TransferAccountInfo";
 
 export default function InputAmount() {
   const navigate = useNavigate();
 
   const { myInfoQuery, accountByIdQuery } = useAccounts();
-  const {
-    data: myInfo,
-    /*isLoading: isLoadingForMyInfo,
-    isError: isErrorForMyInfo,
-    error: myInfoError,*/
-  } = myInfoQuery();
-
   const { transferAccountInfo, setTransferAccountInfo } = useAccountContext();
-
-  const {
-    data: transferAccount,
-    /*isLoading: isLoadingForTransferAccount,
-    isError: isErrorForTransferAccount,
-    error: transferAccountError,*/
-  } = accountByIdQuery(
-    transferAccountInfo?.id!,
-    transferAccountInfo?.account_type!,
-  );
-
   const { transferMutation } = useTransfer();
 
   const [amount, setAmount] = useState(0);
+  const [isLimitExceededAmount, setIsLimitExceededAmount] = useState(false);
   const [isTransferProcessing, setIsTransferProcessing] = useState(false);
+
+  /**
+   * 계좌 정보 불러오기
+   */
+  const {
+    data: myInfo,
+    isLoading: isLoadingForMyInfo,
+    isError: isErrorForMyInfo,
+    error: errorMyInfo,
+  } = myInfoQuery();
+
+  const {
+    data: transferAccount,
+    isLoading: isLoadingForTransferAccount,
+    isError: isErrorForTransferAccount,
+    error: errorTransferAccount,
+  } = accountByIdQuery(
+    transferAccountInfo?.id ?? 0,
+    transferAccountInfo?.account_type ??
+      TRANSFER_ACCOUNT_TYPE.RECENT_TRANSFER_ACCOUNT,
+  );
 
   /**
    * 컴포넌트 마운트 시 sessionStorage 에서 transferAccountInfo 를 불러옴
@@ -68,42 +70,11 @@ export default function InputAmount() {
   ]);
 
   /**
-   * 1일 송금 가능한 한도 금액
-   */
-  const ONE_DAY_AMOUNT = 5000000;
-  const remainTransferOneDayAmount = useMemo(() => {
-    if (!myInfo) return 0;
-    return ONE_DAY_AMOUNT - myInfo.transfer.one_day_amount;
-  }, [myInfo]);
-  const isLimitExceededOneDayAmount = useMemo(
-    () => remainTransferOneDayAmount - amount < 0,
-    [remainTransferOneDayAmount, amount],
-  );
-  /**
-   * 1회 송금 가능한 한도 금액
-   */
-  const ONE_TIME_AMOUNT = 2000000;
-  const isLimitExceededOneTimeAmount = useMemo(
-    () => ONE_TIME_AMOUNT - amount < 0,
-    [amount],
-  );
-  // 송금 금액 초과시 알림 텍스트
-  let limitExceededAmountText = "";
-
-  if (isLimitExceededOneTimeAmount) {
-    limitExceededAmountText = `${formatToWon(ONE_TIME_AMOUNT)}원 송금 가능 (1회 한도 초과)`;
-  } else if (isLimitExceededOneDayAmount) {
-    limitExceededAmountText = `${formatToWon(remainTransferOneDayAmount)}원 송금 가능 (1일 한도 초과)`;
-  }
-  // 송금 금액 초과 유무
-  const isLimitExceededAmount =
-    isLimitExceededOneDayAmount || isLimitExceededOneTimeAmount;
-
-  /**
    * 송금 계좌 정보 Account 정보로 치환
    */
   const account: Account | null = useMemo(() => {
     if (!transferAccount) return null;
+
     if (transferAccountInfo?.account_type === TRANSFER_ACCOUNT_TYPE.MY_ACCOUNT)
       return transferAccount as Account;
 
@@ -122,6 +93,7 @@ export default function InputAmount() {
       },
     } as Account;
   }, [transferAccount, transferAccountInfo]);
+
   /**
    * 송금 프로세스 중 표기될 이름
    */
@@ -133,6 +105,7 @@ export default function InputAmount() {
     }
     return account?.holder_name || "";
   }, [transferAccountInfo, account]);
+
   /**
    * 송금할 정보
    */
@@ -150,6 +123,7 @@ export default function InputAmount() {
   const handleAddAmount = (amount: number) => {
     setAmount((prevAmount) => prevAmount + amount);
   };
+
   /**
    * number keypad 버튼 이벤트
    */
@@ -167,6 +141,7 @@ export default function InputAmount() {
       }
     });
   };
+
   /**
    * 송금 확인 버튼 이벤트
    */
@@ -192,61 +167,39 @@ export default function InputAmount() {
       },
     });
   };
+
+  if (isTransferProcessing) {
+    return (
+      <TransferProcess amount={amount} accountName={transferProcessNickName} />
+    );
+  }
+
+  if (!transferAccountInfo || !account || !myInfo) {
+    return null;
+  }
   return (
     <>
-      {isTransferProcessing ? (
-        <TransferProcess
-          amount={amount}
-          accountName={transferProcessNickName}
-        />
-      ) : (
-        transferAccountInfo && (
-          <>
-            <div className="flex-1 flex justify-center items-center">
-              <div className="text-center space-y-4">
-                <div className="flex flex-col items-center space-y-1">
-                  <BankLogo
-                    url={account?.bank.image_url}
-                    alias={account?.bank.aliases}
-                  />
-                  <span className="inline-flex items-center space-x-1">
-                    <span className="text-sm opacity-55">
-                      {`${account?.bank.name} ${account?.account_number}`}
-                    </span>
-                    <IconSafe />
-                  </span>
-                </div>
-                <div>
-                  <p className="text-2xl font-semibold">{`${account?.holder_name} 님에게`}</p>
-                  {amount ? (
-                    <AlertTooltip
-                      tooltipText={limitExceededAmountText}
-                      visible={isLimitExceededAmount}
-                    >
-                      <p className="text-2xl font-semibold">{`${formatToWon(amount)}원`}</p>
-                    </AlertTooltip>
-                  ) : (
-                    <p className="text-2xl font-semibold opacity-15">
-                      얼마를 보낼까요?
-                    </p>
-                  )}
-                  <span className="opacity-40 text-sm pt-2">{`출금계좌: ${myInfo?.account.bank.name} ${myInfo?.account.account_number}(${myInfo?.account.balance}원)`}</span>
-                </div>
-              </div>
-            </div>
-            <BottomAreaWrapper>
-              <NumberShortcut onAddAmount={handleAddAmount} />
-              <NumberKeypad onUpdateAmount={handleUpdateAmount} />
-              <ConfirmButton
-                onClick={handleConfirm}
-                disabled={!amount || isLimitExceededAmount}
-              >
-                확인
-              </ConfirmButton>
-            </BottomAreaWrapper>
-          </>
-        )
-      )}
+      <TransferAccountInfo
+        account={account}
+        amount={amount}
+        myInfo={myInfo}
+        isLoading={isLoadingForTransferAccount && isLoadingForMyInfo}
+        isError={isErrorForTransferAccount || isErrorForMyInfo}
+        errorMessage={
+          errorTransferAccount?.message || errorMyInfo?.message || ""
+        }
+        setIsLimitExceededAmount={setIsLimitExceededAmount}
+      />
+      <BottomAreaWrapper>
+        <NumberShortcut onAddAmount={handleAddAmount} />
+        <NumberKeypad onUpdateAmount={handleUpdateAmount} />
+        <ConfirmButton
+          onClick={handleConfirm}
+          disabled={!amount || isLimitExceededAmount}
+        >
+          확인
+        </ConfirmButton>
+      </BottomAreaWrapper>
     </>
   );
 }

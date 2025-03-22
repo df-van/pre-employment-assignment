@@ -4,15 +4,26 @@ import useTransfer from "@/hooks/useTransfer";
 import Image from "@/assets/images/img_success.png";
 import ImageX2 from "@/assets/images/img_success_x2.png";
 import TopAreaWrapper from "@/components/common/TopAreaWrapper";
-import { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import BottomAreaWrapper from "@/components/common/BottomAreaWrapper";
 import ConfirmButton from "@/components/common/ConfirmButton";
+import LoadingCard from "@/components/common/LoadingCard";
+import ErrorMessage from "@/components/common/ErrorMessage";
 
 export default function TransferComplete() {
   const navigate = useNavigate();
 
   const { useSuccessTransfer } = useTransfer();
-  const { data } = useSuccessTransfer();
+  const { data, isError, isLoading, error } = useSuccessTransfer();
+
+  /**
+   * loading 이 끝나고도 data 값이 없을 경우 홈으로 리다이렉트
+   */
+  useEffect(() => {
+    if (!isLoading && !data) {
+      navigate(PATH.HOME);
+    }
+  }, [data, isLoading, navigate]);
 
   const myBankName = useMemo(() => {
     const bankInfo =
@@ -24,6 +35,10 @@ export default function TransferComplete() {
   const handleConfirm = () => {
     navigate(PATH.ACCOUNTS);
   };
+
+  if (isLoading) return <LoadingCard />;
+  if (isError) return <ErrorMessage message={error.message} />;
+  if (!data) return null;
   return (
     <>
       <TopAreaWrapper
