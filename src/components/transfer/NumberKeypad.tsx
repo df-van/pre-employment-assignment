@@ -29,7 +29,7 @@ export default function NumberKeypad({
         <li className="p-1" key={id}>
           {id !== "blank" && (
             <IconButton
-              className="w-full py-1"
+              className="w-full py-1 rounded-xl"
               onClick={() => handleClick(value)}
             >
               {id === "delete" ? (

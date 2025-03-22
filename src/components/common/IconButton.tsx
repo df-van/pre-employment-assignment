@@ -16,7 +16,7 @@ export default function IconButton({
   };
   return (
     <button
-      className={`flex justify-center items-center rounded hover:bg-hover hover:duration-150 duration-300 transition-all ${className}`}
+      className={`flex justify-center items-center rounded hover:bg-hover hover:duration-200 duration-[400ms] transition-all ${className}`}
       onClick={handleClick}
       {...props}
     >
